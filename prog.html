@@ -1,0 +1,502 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Прогрессиялар - ҰБТ тақырыптары бойыншы математикалық есептер</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f9ff;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #90caf9;
+        }
+        
+        .test-header {
+            background-color: #2563eb;
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .test-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .test-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .option input {
+            margin-right: 12px;
+            transform: scale(1.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1e3a8a;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .result-container {
+            display: none;
+            background-color: #f0f9ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid #dbeafe;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        
+        .score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        .math-expression {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2rem;
+            margin: 15px 0;
+            padding: 10px;
+            background-color: #f8fafc;
+            border-radius: 4px;
+            text-align: center;
+        }
+        
+        /* Адаптивный дизайн */
+        @media (max-width: 768px) {
+            .test-title {
+                font-size: 1.5rem;
+            }
+            
+            .test-container {
+                padding: 20px;
+            }
+            
+            .question-text {
+                font-size: 1rem;
+            }
+        }
+    </style>
+    <!-- Добавляем MathJax для отображения математических выражений -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$','$'], ['\\(','\\)']],
+                displayMath: [['$$','$$'], ['\\[','\\]']],
+                processEscapes: true
+            }
+        });
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">ҰБТ-Математика</a>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="algebы.html">Біз жайлы</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="test-header">
+        <div class="container">
+            <h1 class="test-title">Тест: Арифметикалық және геометриялық прогрессиялар</h1>
+            <p>Арифметикалық және геометриялық прогрессиялар бойынша білімді тексеру</p>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="test-container">
+            <form id="progression-test">
+                <!-- Сұрақтар JavaScript арқылы жасалады -->
+            </form>
+            
+            <div class="result-container" id="result">
+                <h3 class="result-title">Тест нәтижесі</h3>
+                <div class="score">Сіздің нәтижеңіз: <span id="score">0</span>/40</div>
+                <p id="result-message"></p>
+                <button class="btn" onclick="window.location.href='algeb.html'" style="margin-top: 20px;">Бөлімдерге оралу</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>© 404 Found Group.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Функция для генерации задач по прогрессиям
+        function generateProgressionProblems() {
+            const problems = [];
+            
+            // Функция для генерации случайного числа в диапазоне
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            
+            // Генерация задачи для арифметической прогрессии: найти an
+            function generateArithmeticAnProblem() {
+                const a1 = getRandomInt(-10, 10);
+                const d = getRandomInt(-5, 5);
+                const n = getRandomInt(5, 15);
+                
+                const an = a1 + (n - 1) * d;
+                
+                const question = `Арифметикалық прогрессия берілген: \\(a_1 = ${a1}\\), \\(d = ${d}\\). \\(a_${n}\\)-ді табыңыз.`;
+                return { question, correct: an };
+            }
+            
+            // Генерация задачи для арифметической прогрессии: найти Sn
+            function generateArithmeticSnProblem() {
+                const a1 = getRandomInt(-10, 10);
+                const d = getRandomInt(-5, 5);
+                const n = getRandomInt(5, 15);
+                
+                const an = a1 + (n - 1) * d;
+                const Sn = Math.round((n * (a1 + an)) / 2);
+                
+                const question = `Арифметикалық прогрессия берілген: \\(a_1 = ${a1}\\), \\(d = ${d}\\). Алғашқы ${n} мүшесінің қосындысын (\\(S_${n}\\)) табыңыз.`;
+                return { question, correct: Sn };
+            }
+            
+            // Генерация задачи для арифметической прогрессии: найти an и Sn
+            function generateArithmeticAnSnProblem() {
+                const a1 = getRandomInt(-10, 10);
+                const d = getRandomInt(-5, 5);
+                const n = getRandomInt(5, 15);
+                
+                const an = a1 + (n - 1) * d;
+                const Sn = Math.round((n * (a1 + an)) / 2);
+                
+                const question = `Арифметикалық прогрессия берілген: \\(a_1 = ${a1}\\), \\(d = ${d}\\). \\(a_${n}\\) және \\(S_${n}\\)-ді табыңыз.`;
+                return { question, correct: [an, Sn], isTwoAnswer: true };
+            }
+            
+            // Генерация задачи для геометрической прогрессии: найти bn
+            function generateGeometricBnProblem() {
+                const b1 = getRandomInt(-5, 5);
+                const q = getRandomInt(2, 5);
+                const n = getRandomInt(3, 6);
+                
+                const bn = b1 * Math.pow(q, n - 1);
+                if (!Number.isInteger(bn)) return generateGeometricBnProblem();
+                
+                const question = `Геометриялық прогрессия берілген: \\(b_1 = ${b1}\\), \\(q = ${q}\\). \\(b_${n}\\)-ді табыңыз.`;
+                return { question, correct: bn };
+            }
+            
+            // Генерация задачи для геометрической прогрессии: найти Sn
+            function generateGeometricSnProblem() {
+                const b1 = getRandomInt(-5, 5);
+                const q = getRandomInt(2, 5);
+                const n = getRandomInt(3, 6);
+                
+                const Sn = Math.round(b1 * (Math.pow(q, n) - 1) / (q - 1));
+                if (!Number.isInteger(Sn)) return generateGeometricSnProblem();
+                
+                const question = `Геометриялық прогрессия берілген: \\(b_1 = ${b1}\\), \\(q = ${q}\\). Алғашқы ${n} мүшесінің қосындысын (\\(S_${n}\\)) табыңыз.`;
+                return { question, correct: Sn };
+            }
+            
+            // Генерация задачи для геометрической прогрессии: найти bn и Sn
+            function generateGeometricBnSnProblem() {
+                const b1 = getRandomInt(-5, 5);
+                const q = getRandomInt(2, 5);
+                const n = getRandomInt(3, 6);
+                
+                const bn = b1 * Math.pow(q, n - 1);
+                const Sn = Math.round(b1 * (Math.pow(q, n) - 1) / (q - 1));
+                if (!Number.isInteger(bn) || !Number.isInteger(Sn)) return generateGeometricBnSnProblem();
+                
+                const question = `Геометриялық прогрессия берілген: \\(b_1 = ${b1}\\), \\(q = ${q}\\). \\(b_${n}\\) және \\(S_${n}\\)-ді табыңыз.`;
+                return { question, correct: [bn, Sn], isTwoAnswer: true };
+            }
+            
+            // Генерация неправильных ответов
+            function generateWrongAnswers(correct, isTwoAnswer = false) {
+                const wrongAnswers = new Set();
+                while (wrongAnswers.size < 3) {
+                    if (isTwoAnswer) {
+                        const variation1 = getRandomInt(-5, 5);
+                        const variation2 = getRandomInt(-5, 5);
+                        const newAnswer1 = correct[0] + variation1;
+                        const newAnswer2 = correct[1] + variation2;
+                        if (variation1 !== 0 || variation2 !== 0) {
+                            wrongAnswers.add(JSON.stringify([newAnswer1, newAnswer2]));
+                        }
+                    } else {
+                        const variation = getRandomInt(-5, 5);
+                        const newAnswer = correct + variation;
+                        if (variation !== 0) {
+                            wrongAnswers.add(newAnswer);
+                        }
+                    }
+                }
+                return isTwoAnswer ? Array.from(wrongAnswers).map(JSON.parse) : Array.from(wrongAnswers);
+            }
+            
+            // Генерация 40 задач (по 6-7 задач каждого типа)
+            const types = [
+                generateArithmeticAnProblem,
+                generateArithmeticSnProblem,
+                generateArithmeticAnSnProblem,
+                generateGeometricBnProblem,
+                generateGeometricSnProblem,
+                generateGeometricBnSnProblem
+            ];
+            
+            for (let i = 0; i < 40; i++) {
+                const typeIndex = i % types.length;
+                const generator = types[typeIndex];
+                const problem = generator();
+                const correctAnswer = problem.correct;
+                const wrongAnswers = generateWrongAnswers(correctAnswer, problem.isTwoAnswer);
+                
+                const answers = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+                
+                problems.push({
+                    question: problem.question,
+                    correct: correctAnswer,
+                    answers: answers,
+                    isTwoAnswer: problem.isTwoAnswer
+                });
+            }
+            
+            return problems;
+        }
+
+        // Глобальные переменные для хранения задач и правильных ответов
+        let generatedProblems = [];
+        let correctAnswersMap = {};
+
+        // Отображение задач
+        function displayProblems() {
+            generatedProblems = generateProgressionProblems();
+            const form = document.getElementById('progression-test');
+            form.innerHTML = '';
+            
+            generatedProblems.forEach((problem, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionText = document.createElement('p');
+                questionText.className = 'question-text';
+                questionText.innerHTML = `${index + 1}. ${problem.question}`;
+                
+                const options = document.createElement('div');
+                options.className = 'options';
+                
+                // Формируем варианты ответов
+                let optionsHTML = '';
+                if (problem.isTwoAnswer) {
+                    problem.answers.forEach((answer, i) => {
+                        optionsHTML += `
+                            <label class="option">
+                                <input type="radio" name="q${index + 1}" value="${String.fromCharCode(97 + i)}" required>
+                                ${String.fromCharCode(97 + i)}) (${answer[0]}, ${answer[1]})
+                            </label>
+                        `;
+                    });
+                } else {
+                    problem.answers.forEach((answer, i) => {
+                        optionsHTML += `
+                            <label class="option">
+                                <input type="radio" name="q${index + 1}" value="${String.fromCharCode(97 + i)}" required>
+                                ${String.fromCharCode(97 + i)}) ${answer}
+                            </label>
+                        `;
+                    });
+                }
+                options.innerHTML = optionsHTML;
+                
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(options);
+                
+                // Сохраняем правильный ответ
+                correctAnswersMap[`q${index + 1}`] = {
+                    correctIndex: String.fromCharCode(97 + problem.answers.findIndex(a => 
+                        problem.isTwoAnswer ? 
+                            a[0] === problem.correct[0] && a[1] === problem.correct[1] : 
+                            a === problem.correct
+                    )),
+                    correctAnswer: problem.correct,
+                    isTwoAnswer: problem.isTwoAnswer
+                };
+                
+                form.appendChild(questionDiv);
+            });
+
+            // Кнопка завершения теста
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'btn-container';
+            btnContainer.innerHTML = '<button type="button" class="btn" onclick="checkTest()">Тестті аяқтау</button>';
+            form.appendChild(btnContainer);
+            
+            // Перерисовываем формулы с помощью MathJax
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        // Проверка теста
+        function checkTest() {
+            let score = 0;
+            const form = document.getElementById('progression-test');
+            const resultContainer = document.getElementById('result');
+            
+            // Проверяем каждый вопрос
+            for (let i = 1; i <= 40; i++) {
+                const questionName = `q${i}`;
+                const selectedOption = form.elements[questionName]?.value;
+                const correctAnswerData = correctAnswersMap[questionName];
+                
+                // Проверяем, совпадает ли выбранный ответ с правильным
+                if (selectedOption === correctAnswerData.correctIndex) {
+                    score++;
+                }
+            }
+            
+            // Показываем результаты
+            document.getElementById('score').textContent = score;
+            
+            const percentage = (score / 40) * 100;
+            const resultMessage = document.getElementById('result-message');
+            if (percentage >= 85) {
+                resultMessage.textContent = "Тамаша нәтиже! Сіз прогрессияларды жақсы білесіз.";
+            } else if (percentage >= 60) {
+                resultMessage.textContent = "Жақсы нәтиже! Кейбір тақырыптарды қайталау пайдалы болуы мүмкін.";
+            } else if (percentage >= 40) {
+                resultMessage.textContent = "Орташа нәтиже. Прогрессиялар формулаларын қайталап көріңіз.";
+            } else {
+                resultMessage.textContent = "Тақырыпты қайталау керек. Арифметикалық және геометриялық прогрессияның негізгі формулаларын есте сақтаңыз.";
+            }
+            
+            form.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Инициализация при загрузке
+        window.onload = displayProblems;
+    </script>
+</body>
+</html>

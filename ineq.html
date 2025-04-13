@@ -1,0 +1,535 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Теңсіздіктер - ҰБТ тақырыптары бойыншы математикалық есептер</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f9ff;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #90caf9;
+        }
+        
+        .test-header {
+            background-color: #2563eb;
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .test-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .test-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .option input {
+            margin-right: 12px;
+            transform: scale(1.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1e3a8a;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .result-container {
+            display: none;
+            background-color: #f0f9ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid #dbeafe;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        
+        .score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">ҰБТ-Математика</a>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="algebra.html">Біз жайлы</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="test-header">
+        <div class="container">
+            <h1 class="test-title">Тест: Теңсіздіктер</h1>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="test-container">
+            <form id="inequality-test">
+                <!-- Сұрақтар JavaScript арқылы жасалады -->
+            </form>
+            
+            <div class="result-container" id="result">
+                <h3 class="result-title">Тест нәтижесі</h3>
+                <div class="score">Сіздің нәтижеңіз: <span id="score">0</span>/40</div>
+                <p id="result-message"></p>
+                <button class="btn" onclick="window.location.href='algeb.html'" style="margin-top: 20px;">Бөлімдерге оралу</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>© 404 Found Group.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Глобальные переменные для хранения вопросов и правильных ответов
+        let generatedProblems = [];
+        let correctAnswersMap = {};
+    
+        // Функция для генерации случайного числа в диапазоне
+        function getRandomInt(min, max) {
+            return Math.floor(Math.random() * (max - min + 1)) + min;
+        }
+        
+        // Функция для округления до ближайшего целого
+        function roundToInt(number) {
+            return Math.round(number);
+        }
+        
+        // Форматирование коэффициента для уравнения
+        function formatCoefficient(value, isFirst = false) {
+            if (value === 1 && !isFirst) return '+';
+            if (value === -1) return '-';
+            if (value > 0 && !isFirst) return `+ ${value}`;
+            if (value < 0) return `- ${Math.abs(value)}`;
+            return value.toString();
+        }
+        
+        // Генерация простого линейного неравенства вида ax + b > c
+        function generateLinearInequality() {
+            let a, b, c;
+            
+            // Гарантируем, что a не будет 0 или 1 (чтобы не было 0x или 1x)
+            do {
+                a = getRandomInt(-5, 5);
+            } while (a === 0 || a === 1 || a === -1);
+            
+            b = getRandomInt(-10, 10);
+            c = getRandomInt(-10, 10);
+            const sign = ['>', '<', '>=', '<='][getRandomInt(0, 3)];
+            
+            // Форматируем уравнение
+            let equation;
+            const aPart = a === 1 ? 'x' : (a === -1 ? '-x' : `${a}x`);
+            
+            if (b > 0) {
+                equation = `${aPart} + ${b} ${sign} ${c}`;
+            } else if (b < 0) {
+                equation = `${aPart} - ${Math.abs(b)} ${sign} ${c}`;
+            } else {
+                equation = `${aPart} ${sign} ${c}`;
+            }
+            
+            // Вычисляем правильный ответ
+            const criticalPoint = roundToInt((c - b) / a);
+            let correctAnswer;
+            
+            if (a > 0) {
+                if (sign === '>' || sign === '>=') {
+                    correctAnswer = sign === '>=' ? `[${criticalPoint}; ∞)` : `(${criticalPoint}; ∞)`;
+                } else {
+                    correctAnswer = sign === '<=' ? `(-∞; ${criticalPoint}]` : `(-∞; ${criticalPoint})`;
+                }
+            } else {
+                if (sign === '>' || sign === '>=') {
+                    correctAnswer = sign === '>=' ? `(-∞; ${criticalPoint}]` : `(-∞; ${criticalPoint})`;
+                } else {
+                    correctAnswer = sign === '<=' ? `[${criticalPoint}; ∞)` : `(${criticalPoint}; ∞)`;
+                }
+            }
+            
+            return { 
+                a, b, c, sign, 
+                question: equation,
+                correctAnswer,
+                criticalPoint,
+                isLinear: true
+            };
+        }
+        
+        // Генерация квадратного неравенства вида ax² + bx + c > 0
+        function generateQuadraticInequality() {
+            let a, b, c;
+            
+            // Гарантируем, что a не будет 0 или 1 (чтобы не было 0x² или 1x²)
+            do {
+                a = getRandomInt(-3, 3);
+            } while (a === 0);
+            
+            b = getRandomInt(-5, 5);
+            c = getRandomInt(-10, 10);
+            const sign = ['>', '<'][getRandomInt(0, 1)];
+            
+            // Находим корни уравнения ax² + bx + c = 0
+            const discriminant = b * b - 4 * a * c;
+            if (discriminant <= 0) return generateQuadraticInequality(); // Повтор, если нет вещественных корней
+            
+            const root1 = (-b + Math.sqrt(discriminant)) / (2 * a);
+            const root2 = (-b - Math.sqrt(discriminant)) / (2 * a);
+            const minRoot = roundToInt(Math.min(root1, root2));
+            const maxRoot = roundToInt(Math.max(root1, root2));
+            
+            // Форматируем уравнение
+            let equationParts = [];
+            
+            // Часть с x²
+            if (a === 1) {
+                equationParts.push('x²');
+            } else if (a === -1) {
+                equationParts.push('-x²');
+            } else {
+                equationParts.push(`${a}x²`);
+            }
+            
+            // Часть с x
+            if (b !== 0) {
+                if (b === 1) {
+                    equationParts.push('+ x');
+                } else if (b === -1) {
+                    equationParts.push('- x');
+                } else if (b > 0) {
+                    equationParts.push(`+ ${b}x`);
+                } else {
+                    equationParts.push(`- ${Math.abs(b)}x`);
+                }
+            }
+            
+            // Свободный член
+            if (c !== 0) {
+                if (c > 0) {
+                    equationParts.push(`+ ${c}`);
+                } else {
+                    equationParts.push(`- ${Math.abs(c)}`);
+                }
+            }
+            
+            // Собираем уравнение
+            let equation = equationParts.join(' ') + ` ${sign} 0`;
+            
+            let correctAnswer;
+            if (a > 0) {
+                if (sign === '>') {
+                    correctAnswer = `(-∞; ${minRoot}) ∪ (${maxRoot}; ∞)`;
+                } else {
+                    correctAnswer = `(${minRoot}; ${maxRoot})`;
+                }
+            } else {
+                if (sign === '>') {
+                    correctAnswer = `(${minRoot}; ${maxRoot})`;
+                } else {
+                    correctAnswer = `(-∞; ${minRoot}) ∪ (${maxRoot}; ∞)`;
+                }
+            }
+            
+            return { 
+                a, b, c, sign, 
+                question: equation,
+                correctAnswer,
+                roots: [minRoot, maxRoot],
+                isLinear: false
+            };
+        }
+        
+        // Генерация неправильных ответов
+        function generateWrongAnswers(correctAnswer, problem) {
+            const wrongAnswers = new Set();
+            
+            while (wrongAnswers.size < 3) {
+                let wrongAnswer;
+                
+                if (problem.isLinear) {
+                    // Для линейных неравенств генерируем похожие ответы
+                    const variation = getRandomInt(-2, 2);
+                    const newCriticalPoint = roundToInt(problem.criticalPoint + variation);
+                    const useClosedBracket = Math.random() > 0.5;
+                    const flipDirection = Math.random() > 0.7;
+                    
+                    if (problem.a > 0) {
+                        if (problem.sign === '>' || problem.sign === '>=') {
+                            wrongAnswer = flipDirection 
+                                ? (useClosedBracket ? `(-∞; ${newCriticalPoint}]` : `(-∞; ${newCriticalPoint})`)
+                                : (useClosedBracket ? `[${newCriticalPoint}; ∞)` : `(${newCriticalPoint}; ∞)`);
+                        } else {
+                            wrongAnswer = flipDirection 
+                                ? (useClosedBracket ? `[${newCriticalPoint}; ∞)` : `(${newCriticalPoint}; ∞)`)
+                                : (useClosedBracket ? `(-∞; ${newCriticalPoint}]` : `(-∞; ${newCriticalPoint})`);
+                        }
+                    } else {
+                        if (problem.sign === '>' || problem.sign === '>=') {
+                            wrongAnswer = flipDirection 
+                                ? (useClosedBracket ? `[${newCriticalPoint}; ∞)` : `(${newCriticalPoint}; ∞)`)
+                                : (useClosedBracket ? `(-∞; ${newCriticalPoint}]` : `(-∞; ${newCriticalPoint})`);
+                        } else {
+                            wrongAnswer = flipDirection 
+                                ? (useClosedBracket ? `(-∞; ${newCriticalPoint}]` : `(-∞; ${newCriticalPoint})`)
+                                : (useClosedBracket ? `[${newCriticalPoint}; ∞)` : `(${newCriticalPoint}; ∞)`);
+                        }
+                    }
+                } else {
+                    // Для квадратных неравенств генерируем похожие ответы
+                    const variation1 = getRandomInt(-2, 2);
+                    const variation2 = getRandomInt(-2, 2);
+                    const newRoot1 = roundToInt(problem.roots[0] + variation1);
+                    const newRoot2 = roundToInt(problem.roots[1] + variation2);
+                    const flipAnswerType = Math.random() > 0.6;
+                    
+                    if (problem.a > 0) {
+                        wrongAnswer = (problem.sign === '>') ^ flipAnswerType
+                            ? `(${newRoot1}; ${newRoot2})`
+                            : `(-∞; ${newRoot1}) ∪ (${newRoot2}; ∞)`;
+                    } else {
+                        wrongAnswer = (problem.sign === '>') ^ flipAnswerType
+                            ? `(-∞; ${newRoot1}) ∪ (${newRoot2}; ∞)`
+                            : `(${newRoot1}; ${newRoot2})`;
+                    }
+                }
+                
+                if (wrongAnswer !== correctAnswer && !wrongAnswers.has(wrongAnswer)) {
+                    wrongAnswers.add(wrongAnswer);
+                }
+            }
+            
+            return Array.from(wrongAnswers);
+        }
+        
+        // Генерация 40 неравенств (20 линейных и 20 квадратных)
+        function generateInequalityProblems() {
+            const problems = [];
+            
+            for (let i = 0; i < 20; i++) {
+                // Добавляем линейное неравенство
+                const linear = generateLinearInequality();
+                const linearWrong = generateWrongAnswers(linear.correctAnswer, linear);
+                problems.push({
+                    question: linear.question,
+                    correctAnswer: linear.correctAnswer,
+                    answers: [linear.correctAnswer, ...linearWrong].sort(() => Math.random() - 0.5),
+                    problemData: linear
+                });
+                
+                // Добавляем квадратное неравенство
+                const quadratic = generateQuadraticInequality();
+                const quadWrong = generateWrongAnswers(quadratic.correctAnswer, quadratic);
+                problems.push({
+                    question: quadratic.question,
+                    correctAnswer: quadratic.correctAnswer,
+                    answers: [quadratic.correctAnswer, ...quadWrong].sort(() => Math.random() - 0.5),
+                    problemData: quadratic
+                });
+            }
+            
+            return problems;
+        }
+    
+        // Отображение вопросов
+        function displayProblems() {
+            generatedProblems = generateInequalityProblems();
+            const form = document.getElementById('inequality-test');
+            form.innerHTML = '';
+            
+            generatedProblems.forEach((problem, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                questionDiv.innerHTML = `
+                    <div class="question-text">${index + 1}. Теңсіздікті шешіңіз: ${problem.question}</div>
+                    <div class="options">
+                        ${problem.answers.map((answer, i) => `
+                            <label class="option">
+                                <input type="radio" name="q${index + 1}" value="${String.fromCharCode(97 + i)}" required>
+                                ${String.fromCharCode(97 + i)}) ${answer}
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                
+                // Сохраняем правильный ответ
+                correctAnswersMap[`q${index + 1}`] = String.fromCharCode(
+                    97 + problem.answers.findIndex(a => a === problem.correctAnswer)
+                );
+                
+                form.appendChild(questionDiv);
+            });
+    
+            // Кнопка завершения теста
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'btn-container';
+            btnContainer.innerHTML = '<button type="button" class="btn" onclick="checkTest()">Тестті аяқтау</button>';
+            form.appendChild(btnContainer);
+        }
+    
+        // Проверка теста
+        function checkTest() {
+            let score = 0;
+            const form = document.getElementById('inequality-test');
+            const resultContainer = document.getElementById('result');
+            
+            // Проверяем каждый вопрос
+            for (let i = 1; i <= 40; i++) {
+                const questionName = `q${i}`;
+                const selectedOption = form.elements[questionName]?.value;
+                if (selectedOption === correctAnswersMap[questionName]) {
+                    score++;
+                }
+            }
+            
+            // Показываем результаты
+            document.getElementById('score').textContent = score;
+            
+            const percentage = (score / 40) * 100;
+            const resultMessage = document.getElementById('result-message');
+            if (percentage >= 85) {
+                resultMessage.textContent = "Тамаша нәтиже! Сіз теңсіздіктерді жақсы білесіз.";
+            } else if (percentage >= 50) {
+                resultMessage.textContent = "Жақсы нәтиже! Кішкене қателерді түзетуге болады.";
+            } else {
+                resultMessage.textContent = "Материалды қайталап, тағы да көріңіз. Сіз жақсырақ жасай аласыз!";
+            }
+            
+            form.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+    
+        // Инициализация при загрузке
+        window.onload = displayProblems;
+    </script>
+</body>
+</html>

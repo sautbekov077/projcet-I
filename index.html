@@ -1,0 +1,235 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>ҰБТ тақырыптары бойыншы математикалық есептер</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f9ff;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #90caf9;
+        }
+        
+        .hero {
+            background-color: #2563eb;
+            color: white;
+            padding: 50px 0;
+            text-align: center;
+        }
+        
+        .hero h1 {
+            font-size: 2.5rem;
+            margin-bottom: 15px;
+        }
+        
+        .hero p {
+            font-size: 1.2rem;
+            max-width: 800px;
+            margin: 0 auto;
+            opacity: 0.9;
+        }
+        
+        .sections {
+            padding: 50px 0;
+        }
+        
+        .section-title {
+            text-align: center;
+            margin-bottom: 40px;
+            color: #1e3a8a;
+            font-size: 2rem;
+        }
+        
+        .cards {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+            gap: 30px;
+        }
+        
+        .card {
+            background-color: white;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            transition: transform 0.3s, box-shadow 0.3s;
+        }
+        
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 10px 25px rgba(0, 0, 0, 0.15);
+        }
+        
+        .card-header {
+            background-color: #3b82f6;
+            color: white;
+            padding: 15px;
+            font-size: 1.2rem;
+            font-weight: bold;
+        }
+        
+        .card-body {
+            padding: 20px;
+        }
+        
+        .card-body p {
+            margin-top: 0;
+            color: #555;
+        }
+        
+        .card-footer {
+            padding: 15px 20px;
+            border-top: 1px solid #eee;
+            text-align: right;
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 10px 20px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1e3a8a;
+        }
+        
+        .footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">ҰБТ-Математика</a>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="about.html">Жоба жайлы</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="hero">
+        <div class="container">
+            <h1>Математика бойынша ҰБТ-ға дайындық</h1>
+            <p>Ұлттық бірыңғай тестілеуге дайындалу үшін математиканың әртүрлі бөлімдері бойынша тест тапсырыңыз. Біліміңізді бағалаңыз және үлгеріміңізді қадағалаңыз!</p>
+        </div>
+    </section>
+    
+    <section class="sections">
+        <div class="container">
+            <h2 class="section-title">Тест бөлімдері</h2>
+            <div class="cards">
+                <div class="card">
+                    <div class="card-header">Алгебра</div>
+                    <div class="card-body">
+                        <p>Алгебралық өрнектер, теңдеулер және теңсіздіктер бойынша тесттер.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="algeb.html" class="btn">Тестілеуді бастау</a>
+                    </div>
+                </div>
+            
+                
+                <div class="card">
+                    <div class="card-header">Тригонометрия</div>
+                    <div class="card-body">
+                        <p>Тригонометриялық функцияларды, формулаларды және теңдеулерді шығаруларға ​​арналған тесттер.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="trigonometry.html" class="btn">Тестілеуді бастау</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Туындылар</div>
+                    <div class="card-body">
+                        <p>Функциялардың туындыларын есептеуге есептер және олардың қолданылуы.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="derivatives.html" class="btn">Тестілеуді бастау</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header">Интегралдар</div>
+                    <div class="card-body">
+                        <p>Анықталған және анықталмаған интегралдарды есептеуге арналған тесттер.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="integrals.html" class="btn">Тестілеуді бастау</a>
+                    </div>
+                </div>
+                
+                <div class="card">
+                    <div class="card-header"></div>
+                    <div class="card-body">
+                        <p>.</p>
+                    </div>
+                    <div class="card-footer">
+                        <a href="combinatorics.html" class="btn">Тестілеуді бастау</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>© 404 Found Group.</p>
+        </div>
+    </footer>
+</body>
+</html>

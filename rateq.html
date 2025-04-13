@@ -1,0 +1,527 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Рационал теңдеулер - ҰБТ тақырыптары бойыншы математикалық есептер</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f9ff;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #90caf9;
+        }
+        
+        .test-header {
+            background-color: #2563eb;
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .test-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .test-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .equation {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2rem;
+            margin: 10px 0;
+            padding: 10px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
+        .fraction {
+            display: inline-block;
+            vertical-align: middle;
+            text-align: center;
+            margin: 0 5px;
+        }
+        
+        .numerator, .denominator {
+            display: block;
+            padding: 0 5px;
+        }
+        
+        .denominator {
+            border-top: 1px solid #333;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+            margin-top: 15px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+            background-color: #f8f9fa;
+        }
+        
+        .option:hover {
+            background-color: #e9f0f8;
+        }
+        
+        .option input {
+            margin-right: 12px;
+            transform: scale(1.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+            margin-top: 20px;
+        }
+        
+        .btn:hover {
+            background-color: #1e3a8a;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .test-result {
+            background-color: #f0f9ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid #dbeafe;
+            display: none;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        
+        .test-score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+    </style>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">ҰБТ-Математика</a>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="algebra.html">Біз жайлы</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="test-header">
+        <div class="container">
+            <h1 class="test-title">Тест: Рационал теңдеулер</h1>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="test-container">
+            <form id="rational-equations-test">
+                <div id="questions-container"></div>
+                
+                <div class="btn-container">
+                    <button type="button" class="btn" id="check-results">Тестті аяқтау</button>
+                </div>
+                
+                <div class="test-result" id="test-result">
+                    <h3 class="result-title">Тест нәтижесі</h3>
+                    <div class="test-score">Сіздің нәтижеңіз: <span id="score">0</span>/25</div>
+                    <p id="result-message"></p>
+                    <button class="btn" onclick="resetTest()">Қайта бастау</button>
+                    <button class="btn" onclick="window.location.href='algeb.html'" style="margin-left: 10px;">Бөлімдерге оралу</button>
+                </div>
+            </form>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>© 2023 Математика тестілері</p>
+        </div>
+    </footer>
+    
+   <script>
+    // Глобальные переменные
+    let generatedProblems = [];
+    let correctAnswersMap = {};
+
+    // Генерация случайного целого числа
+    function getRandomInt(min, max) {
+        return Math.floor(Math.random() * (max - min + 1)) + min;
+    }
+    
+    // Генерация дробного числа с одним знаком после запятой
+    function getRandomDecimal(min, max) {
+        return Math.round((Math.random() * (max - min) + min) * 10) / 10;
+    }
+
+    // Форматирование дроби в HTML
+    function formatFraction(numerator, denominator) {
+        return `
+            <span class="fraction">
+                <span class="numerator">${numerator}</span>
+                <span class="denominator">${denominator}</span>
+            </span>
+        `;
+    }
+
+    // Форматирование линейного или квадратного выражения
+    function formatExpression(a, b, isQuadratic = false) {
+        let parts = [];
+        
+        if (isQuadratic) {
+            if (a !== 0) parts.push(a === 1 ? "x²" : a === -1 ? "-x²" : `${a}x²`);
+            if (b !== 0) parts.push(b > 0 ? `+ ${b}x` : `- ${Math.abs(b)}x`);
+        } else {
+            if (a !== 0) parts.push(a === 1 ? "x" : a === -1 ? "-x" : `${a}x`);
+            if (b !== 0) parts.push(b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`);
+        }
+        
+        let expr = parts.join(" ");
+        if (expr.startsWith("+ ")) expr = expr.substring(2);
+        return expr || "0";
+    }
+
+    // Генерация простого рационального уравнения
+    function generateSimpleEquation() {
+        let a, b, c, d, k, x;
+        let attempts = 0;
+        
+        do {
+            a = getRandomInt(1, 5);
+            b = getRandomInt(-5, 5);
+            c = getRandomInt(1, 5);
+            d = getRandomInt(-5, 5);
+            
+            // 70% целых решений, 30% дробных
+            x = Math.random() < 0.7 ? getRandomInt(-5, 5) : getRandomDecimal(-5, 5);
+            
+            // Проверяем, чтобы знаменатель не был равен нулю
+            if (c * x + d === 0) continue;
+            
+            k = (a * x + b) / (c * x + d);
+            k = Math.round(k * 10) / 10; // Округляем до одного знака
+            
+            // Проверяем, чтобы k было "красивым" числом
+            if (Number.isInteger(k) || (k * 10) % 1 === 0) {
+                break;
+            }
+            
+            attempts++;
+            if (attempts > 50) {
+                // Если долго не получается, генерируем целое решение
+                x = getRandomInt(-5, 5);
+                if (c * x + d !== 0) {
+                    k = (a * x + b) / (c * x + d);
+                    k = Math.round(k * 10) / 10;
+                    break;
+                }
+            }
+        } while (true);
+        
+        const numerator = formatExpression(a, b);
+        const denominator = formatExpression(c, d);
+        const equation = formatFraction(numerator, denominator);
+        
+        return {
+            question: `${equation} = ${k}`,
+            answer: x,
+            type: Number.isInteger(x) ? 'integer' : 'decimal'
+        };
+    }
+
+    // Генерация квадратного уравнения с двумя решениями
+    function generateQuadraticEquation() {
+        let x1, x2;
+        do {
+            x1 = getRandomInt(-5, 5);
+            x2 = getRandomInt(-5, 5);
+        } while (x1 === x2);
+        
+        // Формируем знаменатель (x² + bx + c)
+        const b = -(x1 + x2);
+        const c = x1 * x2;
+        
+        // Подбираем числитель (ax + d)
+        const a = getRandomInt(1, 3);
+        const d = getRandomInt(-5, 5);
+        
+        const numerator = formatExpression(a, d);
+        const denominator = formatExpression(1, b, true); // 1x² + bx
+        
+        return {
+            question: `${formatFraction(numerator, denominator)} = 0`,
+            answer: [x1, x2],
+            type: 'multiple'
+        };
+    }
+
+    // Генерация неправильных ответов
+    function generateWrongAnswers(correctAnswer, answerType) {
+        const wrongAnswers = new Set();
+        
+        if (answerType === 'multiple') {
+            // Для уравнений с двумя решениями
+            while (wrongAnswers.size < 3) {
+                const x = getRandomInt(-5, 5);
+                if (x !== correctAnswer[0] && x !== correctAnswer[1]) {
+                    wrongAnswers.add(x);
+                }
+            }
+            return Array.from(wrongAnswers).map(x => `x=${x}`);
+        } else {
+            // Для уравнений с одним решением
+            while (wrongAnswers.size < 3) {
+                let wrongAnswer;
+                if (answerType === 'integer') {
+                    wrongAnswer = correctAnswer + getRandomInt(-2, 2);
+                    if (wrongAnswer === correctAnswer) continue;
+                } else {
+                    wrongAnswer = correctAnswer + (Math.random() > 0.5 ? 0.5 : -0.5);
+                    wrongAnswer = Math.round(wrongAnswer * 10) / 10;
+                    if (wrongAnswer === correctAnswer) continue;
+                }
+                wrongAnswers.add(wrongAnswer);
+            }
+            return Array.from(wrongAnswers).map(x => `x=${x}`);
+        }
+    }
+
+    // Генерация всех задач для теста
+    function generateAllProblems() {
+        const problems = [];
+        
+        for (let i = 0; i < 25; i++) {
+            let problem;
+            // 80% простых уравнений, 20% квадратных
+            if (Math.random() < 0.8) {
+                problem = generateSimpleEquation();
+            } else {
+                problem = generateQuadraticEquation();
+            }
+            
+            // Генерируем неправильные ответы
+            const wrongAnswers = generateWrongAnswers(problem.answer, problem.type);
+            
+            // Формируем все варианты ответов
+            let answers;
+            if (problem.type === 'multiple') {
+                answers = [
+                    `x₁=${problem.answer[0]}, x₂=${problem.answer[1]}`,
+                    ...wrongAnswers
+                ];
+            } else {
+                answers = [
+                    `x=${problem.answer}`,
+                    ...wrongAnswers
+                ];
+            }
+            
+            // Перемешиваем ответы
+            answers = answers.sort(() => Math.random() - 0.5);
+            
+            // Находим индекс правильного ответа
+            const correctIndex = answers.findIndex(ans => 
+                problem.type === 'multiple' 
+                    ? ans.startsWith(`x₁=${problem.answer[0]}`)
+                    : ans === `x=${problem.answer}`
+            );
+            
+            problems.push({
+                question: problem.question,
+                answers: answers,
+                correctIndex: correctIndex,
+                type: problem.type
+            });
+        }
+        
+        return problems;
+    }
+
+    // Отображение теста на странице
+    function displayTest() {
+        generatedProblems = generateAllProblems();
+        const container = document.getElementById('questions-container');
+        container.innerHTML = '';
+        
+        generatedProblems.forEach((problem, index) => {
+            const questionDiv = document.createElement('div');
+            questionDiv.className = 'question';
+            
+            questionDiv.innerHTML = `
+                <div class="question-text">${index + 1}. Теңдеуді шешіңіз:</div>
+                <div class="equation">${problem.question}</div>
+                <div class="options">
+                    ${problem.answers.map((answer, i) => `
+                        <label class="option">
+                            <input type="radio" name="q${index}" value="${String.fromCharCode(97 + i)}" required>
+                            ${String.fromCharCode(97 + i)}) ${answer}
+                        </label>
+                    `).join('')}
+                </div>
+            `;
+            
+            // Сохраняем правильный ответ (буква a, b, c или d)
+            correctAnswersMap[`q${index}`] = String.fromCharCode(97 + problem.correctIndex);
+            container.appendChild(questionDiv);
+        });
+        
+        // Показываем кнопку проверки и скрываем результаты
+        document.getElementById('check-results').style.display = 'inline-block';
+        document.getElementById('test-result').style.display = 'none';
+        document.getElementById('rational-equations-test').style.display = 'block';
+    }
+
+    // Проверка результатов теста
+    function checkResults() {
+        let score = 0;
+        const form = document.getElementById('rational-equations-test');
+        
+        // Проверяем каждый вопрос
+        for (let i = 0; i < 25; i++) {
+            const selectedOption = form.elements[`q${i}`]?.value;
+            if (selectedOption === correctAnswersMap[`q${i}`]) {
+                score++;
+            }
+        }
+        
+        // Отображаем результаты
+        document.getElementById('score').textContent = score;
+        
+        // Формируем сообщение в зависимости от результата
+        const percentage = (score / 25) * 100;
+        const resultMessage = document.getElementById('result-message');
+        
+        if (percentage >= 85) {
+            resultMessage.textContent = "Тамаша нәтиже! Сіз рационал теңдеулерді жақсы білесіз.";
+        } else if (percentage >= 50) {
+            resultMessage.textContent = "Жақсы нәтиже! Кішкене қателерді түзетуге болады.";
+        } else {
+            resultMessage.textContent = "Материалды қайталап, тағы да көріңіз. Сіз жақсырақ жасай аласыз!";
+        }
+        
+        // Показываем блок с результатами и скрываем форму
+        document.getElementById('test-result').style.display = 'block';
+        document.getElementById('check-results').style.display = 'none';
+        form.style.display = 'none';
+        
+        // Плавно прокручиваем к результатам
+        document.getElementById('test-result').scrollIntoView({ behavior: 'smooth' });
+    }
+
+    // Сброс и перезапуск теста
+    function resetTest() {
+        displayTest();
+        window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // Инициализация при загрузке страницы
+    document.addEventListener('DOMContentLoaded', function() {
+        displayTest();
+        document.getElementById('check-results').addEventListener('click', checkResults);
+    });
+</script>
+</body>
+</html>

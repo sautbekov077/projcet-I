@@ -1,0 +1,652 @@
+<!DOCTYPE html>
+<html lang="kk">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Теңсіздіктер жүйесі - ҰБТ тақырыптары бойыншы математикалық есептер</title>
+    <style>
+        body {
+            font-family: 'Roboto', Arial, sans-serif;
+            margin: 0;
+            padding: 0;
+            background-color: #f5f9ff;
+            color: #333;
+        }
+        
+        .header {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 20px 0;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+        }
+        
+        .container {
+            width: 90%;
+            max-width: 1200px;
+            margin: 0 auto;
+        }
+        
+        .header-content {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+        }
+        
+        .logo {
+            font-size: 24px;
+            font-weight: bold;
+            color: white;
+            text-decoration: none;
+        }
+        
+        .nav-menu {
+            display: flex;
+            gap: 25px;
+        }
+        
+        .nav-menu a {
+            color: white;
+            text-decoration: none;
+            font-weight: 500;
+            transition: color 0.3s;
+        }
+        
+        .nav-menu a:hover {
+            color: #90caf9;
+        }
+        
+        .test-header {
+            background-color: #2563eb;
+            color: white;
+            padding: 30px 0;
+            margin-bottom: 30px;
+            text-align: center;
+        }
+        
+        .test-title {
+            font-size: 2rem;
+            margin-bottom: 10px;
+        }
+        
+        .test-container {
+            background-color: white;
+            border-radius: 10px;
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+            padding: 30px;
+            margin-bottom: 40px;
+        }
+        
+        .question {
+            margin-bottom: 25px;
+            padding-bottom: 20px;
+            border-bottom: 1px solid #eee;
+        }
+        
+        .question:last-child {
+            border-bottom: none;
+        }
+        
+        .question-text {
+            font-size: 1.1rem;
+            font-weight: 500;
+            margin-bottom: 15px;
+        }
+        
+        .options {
+            display: grid;
+            grid-template-columns: 1fr;
+            gap: 12px;
+        }
+        
+        .option {
+            display: flex;
+            align-items: center;
+            padding: 10px;
+            border-radius: 5px;
+            transition: background-color 0.2s;
+        }
+        
+        .option:hover {
+            background-color: #f0f7ff;
+        }
+        
+        .option input {
+            margin-right: 12px;
+            transform: scale(1.1);
+        }
+        
+        .btn {
+            display: inline-block;
+            background-color: #3b82f6;
+            color: white;
+            padding: 12px 25px;
+            border-radius: 5px;
+            text-decoration: none;
+            font-weight: 500;
+            border: none;
+            cursor: pointer;
+            font-size: 1rem;
+            transition: background-color 0.3s;
+        }
+        
+        .btn:hover {
+            background-color: #1e3a8a;
+        }
+        
+        .btn-container {
+            text-align: center;
+            margin-top: 30px;
+        }
+        
+        .result-container {
+            display: none;
+            background-color: #f0f9ff;
+            border-radius: 10px;
+            padding: 25px;
+            margin-top: 30px;
+            text-align: center;
+            border: 1px solid #dbeafe;
+        }
+        
+        .result-title {
+            font-size: 1.5rem;
+            color: #1e3a8a;
+            margin-bottom: 15px;
+        }
+        
+        .score {
+            font-size: 1.8rem;
+            font-weight: bold;
+            color: #2563eb;
+            margin-bottom: 20px;
+        }
+        
+        .footer {
+            background-color: #1e3a8a;
+            color: white;
+            padding: 25px 0;
+            text-align: center;
+            margin-top: 50px;
+        }
+
+        /* Стили для отображения математических выражений */
+        .math-expression {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.2rem;
+            margin: 20px 0;
+            padding: 10px;
+            background-color: #f8fafc;
+            border-radius: 4px;
+            text-align: center;
+        }
+    </style>
+    <!-- Добавляем MathJax для отображения математических выражений -->
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/mathjax/2.7.7/MathJax.js?config=TeX-MML-AM_CHTML"></script>
+    <script type="text/x-mathjax-config">
+        MathJax.Hub.Config({
+            tex2jax: {
+                inlineMath: [['$','$'], ['\\(','\\)']],
+                displayMath: [['$$','$$'], ['\\[','\\]']],
+                processEscapes: true
+            }
+        });
+    </script>
+</head>
+<body>
+    <header class="header">
+        <div class="container header-content">
+            <a href="index.html" class="logo">ҰБТ-Математика</a>
+            <nav class="nav-menu">
+                <a href="index.html">Басты бет</a>
+                <a href="algebra.html">Біз жайлы</a>
+            </nav>
+        </div>
+    </header>
+    
+    <section class="test-header">
+        <div class="container">
+            <h1 class="test-title">Тест: Теңсіздіктер жүйесі</h1>
+        </div>
+    </section>
+    
+    <div class="container">
+        <div class="test-container">
+            <form id="system-inequality-test">
+                <!-- Сұрақтар JavaScript арқылы жасалады -->
+            </form>
+            
+            <div class="result-container" id="result">
+                <h3 class="result-title">Тест нәтижесі</h3>
+                <div class="score">Сіздің нәтижеңіз: <span id="score">0</span>/25</div>
+                <p id="result-message"></p>
+                <button class="btn" onclick="window.location.href='algeb.html'" style="margin-top: 20px;">Бөлімдерге оралу</button>
+            </div>
+        </div>
+    </div>
+    
+    <footer class="footer">
+        <div class="container">
+            <p>© 404 Found Group.</p>
+        </div>
+    </footer>
+    
+    <script>
+        // Функция для генерации задач по системам неравенств
+        function generateSystemOfInequalitiesProblems() {
+            const problems = [];
+            
+            // Функция для генерации случайного числа в диапазоне
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            
+            // Форматирование линейного выражения (ax + b)
+            function formatLinear(a, b) {
+                if (a === 0) return `${b}`;
+                if (a === 1) return b === 0 ? 'x' : `x${b > 0 ? '+' : ''}${b}`;
+                if (a === -1) return b === 0 ? '-x' : `-x${b > 0 ? '+' : ''}${b}`;
+                if (b === 0) return `${a}x`;
+                return `${a}x${b > 0 ? '+' : ''}${b}`;
+            }
+            
+            // Форматирование квадратичного выражения (ax^2 + bx + c)
+            function formatQuadratic(a, b, c) {
+                let result = '';
+                if (a !== 0) {
+                    if (a === 1) result += 'x^2';
+                    else if (a === -1) result += '-x^2';
+                    else result += `${a}x^2`;
+                }
+                
+                if (b !== 0) {
+                    if (result && b > 0) result += '+';
+                    if (b === 1) result += 'x';
+                    else if (b === -1) result += '-x';
+                    else result += `${b}x`;
+                }
+                
+                if (c !== 0) {
+                    if (result && c > 0) result += '+';
+                    result += `${c}`;
+                }
+                
+                return result || '0';
+            }
+            
+            // Генерация системы линейных неравенств с гарантированным решением
+            function generateLinearSystem() {
+                // Шаг 1: Сначала выбираем конкретное решение x
+                const solutionX = getRandomInt(-5, 5);
+                
+                // Шаг 2: Создаем первое неравенство ax + b > c так, чтобы оно было верно для x
+                const a1 = getRandomInt(1, 5);
+                const b1 = getRandomInt(-5, 5);
+                // Вычисляем c1 так, чтобы a1*x + b1 > c1 было верно
+                // Например, если мы хотим ">" неравенство, c1 должно быть строго меньше a1*x + b1
+                const c1 = a1 * solutionX + b1 - getRandomInt(1, 3);
+                
+                // Шаг 3: Создаем второе неравенство dx + e < f так, чтобы оно было верно для x
+                const a2 = getRandomInt(1, 5);
+                const b2 = getRandomInt(-5, 5);
+                // Вычисляем c2 так, чтобы a2*x + b2 < c2 было верно
+                // Для "<" неравенства, c2 должно быть строго больше a2*x + b2
+                const c2 = a2 * solutionX + b2 + getRandomInt(1, 3);
+                
+                const sign1 = '>';
+                const sign2 = '<';
+                
+                const ineq1 = `${formatLinear(a1, b1)}${sign1}${c1}`;
+                const ineq2 = `${formatLinear(a2, b2)}${sign2}${c2}`;
+                const question = `\\begin{cases}${ineq1}\\\\${ineq2}\\end{cases}`;
+                
+                return { 
+                    question, 
+                    correct: solutionX,
+                    description: `Решение: x = ${solutionX}`
+                };
+            }
+            
+            // Генерация системы с квадратичным неравенством с гарантированным решением
+            function generateQuadraticSystem() {
+                // Шаг 1: Выбираем конкретное решение x
+                const solutionX = getRandomInt(-5, 5);
+                
+                // Шаг 2: Создаем квадратное неравенство, чтобы a*x^2 + b*x + c >= 0 было верно для x
+                // Для этого можно использовать форму (x-p)(x-q), где p и q корни уравнения
+                // Если мы хотим, чтобы наше значение solutionX удовлетворяло неравенству >= 0,
+                // мы можем выбрать корни так: один корень меньше solutionX, другой больше solutionX,
+                // и множитель a отрицательный, либо наоборот (оба корня не с той стороны от solutionX и a положительный)
+                
+                // Выбираем корни так, чтобы solutionX лежал между ними
+                const root1 = solutionX - getRandomInt(1, 3);
+                const root2 = solutionX + getRandomInt(1, 3);
+                
+                // Вычисляем коэффициенты a, b, c для квадратичного выражения (x-root1)(x-root2)
+                const a = 1; // Для простоты берем a=1
+                const b = -(root1 + root2);
+                const c = root1 * root2;
+                
+                // Квадратное выражение будет положительным между корнями
+                
+                // Шаг 3: Создаем линейное неравенство, чтобы d*x + e < f было верно для x
+                const d = getRandomInt(1, 5);
+                const e = getRandomInt(-5, 5);
+                // Вычисляем f так, чтобы d*x + e < f было верно для solutionX
+                const f = d * solutionX + e + getRandomInt(1, 3);
+                
+                const sign1 = '>=';
+                const sign2 = '<';
+                
+                const ineq1 = `${formatQuadratic(a, b, c)}${sign1}0`;
+                const ineq2 = `${formatLinear(d, e)}${sign2}${f}`;
+                const question = `\\begin{cases}${ineq1}\\\\${ineq2}\\end{cases}`;
+                
+                return { 
+                    question, 
+                    correct: solutionX,
+                    description: `Решение: x = ${solutionX}` 
+                };
+            }
+            
+            // Генерация системы с рациональным неравенством с гарантированным решением
+            function generateRationalSystem() {
+                // Шаг 1: Выбираем конкретное решение x
+                const solutionX = getRandomInt(-5, 5);
+                
+                // Шаг 2: Создаем рациональное неравенство (ax+b)/(cx+d) > 0
+                // Для этого нужно убедиться, что числитель и знаменатель имеют правильные знаки
+                // Выберем числитель так, чтобы a*solutionX + b != 0 и знаменатель c*solutionX + d != 0
+                
+                // Генерируем числитель
+                let a = getRandomInt(1, 5) * (Math.random() > 0.5 ? 1 : -1);
+                let b = getRandomInt(1, 5) * (Math.random() > 0.5 ? 1 : -1);
+                
+                // Проверяем, что числитель не равен нулю в точке solutionX
+                while (a * solutionX + b === 0) {
+                    b = getRandomInt(1, 5) * (Math.random() > 0.5 ? 1 : -1);
+                }
+                
+                // Генерируем знаменатель, который не равен нулю в точке solutionX
+                let c = getRandomInt(1, 5) * (Math.random() > 0.5 ? 1 : -1);
+                let d = getRandomInt(1, 5) * (Math.random() > 0.5 ? 1 : -1);
+                
+                // Проверяем, что знаменатель не равен нулю в точке solutionX
+                while (c * solutionX + d === 0) {
+                    d = getRandomInt(1, 5) * (Math.random() > 0.5 ? 1 : -1);
+                }
+                
+                // Теперь нужно настроить знаки так, чтобы неравенство (a*x+b)/(c*x+d) > 0 было верно для x = solutionX
+                // Дробь > 0, когда числитель и знаменатель имеют одинаковый знак
+                const numValue = a * solutionX + b;
+                const denValue = c * solutionX + d;
+                
+                // Если знаки разные, меняем знак у знаменателя
+                if ((numValue > 0 && denValue < 0) || (numValue < 0 && denValue > 0)) {
+                    c = -c;
+                    d = -d;
+                }
+                
+                // Шаг 3: Создаем линейное неравенство d*x + e <= f так, чтобы оно было верно для x = solutionX
+                const e = getRandomInt(1, 5);
+                const f = getRandomInt(-5, 5);
+                // Вычисляем g так, чтобы e*x + f <= g было верно для solutionX
+                const g = e * solutionX + f;
+                
+                const sign1 = '>';
+                const sign2 = '<=';
+                
+                const ineq1 = `\\frac{${formatLinear(a, b)}}{${formatLinear(c, d)}}${sign1}0`;
+                const ineq2 = `${formatLinear(e, f)}${sign2}${g}`;
+                const question = `\\begin{cases}${ineq1}\\\\${ineq2}\\end{cases}`;
+                
+                return { 
+                    question, 
+                    correct: solutionX,
+                    description: `Решение: x = ${solutionX}` 
+                };
+            }
+            
+            // Генерация системы с логарифмическим неравенством с гарантированным решением
+            function generateLogarithmicSystem() {
+                // Шаг 1: Выбираем конкретное решение x, причем такое, чтобы логарифм был определен
+                const solutionX = getRandomInt(1, 8); // Положительное значение для упрощения
+                
+                // Шаг 2: Выбираем основание логарифма
+                const k = getRandomInt(2, 5);
+                
+                // Шаг 3: Создаем логарифмическое неравенство log_k(ax + b) > c
+                // Сначала выберем ax + b > 0 (условие определения логарифма)
+                const a = getRandomInt(1, 3);
+                // b выбираем так, чтобы a*solutionX + b > 0
+                const b = Math.max(1, -a * solutionX + 1);
+                
+                // Вычисляем значение логарифма в точке solutionX
+                const logValue = Math.log(a * solutionX + b) / Math.log(k);
+                
+                // Выбираем c так, чтобы log_k(a*solutionX + b) > c было верно
+                const c = Math.floor(logValue);
+                
+                // Шаг 4: Создаем линейное неравенство d*x + e >= f так, чтобы оно было верно для x = solutionX
+                const d = getRandomInt(1, 5);
+                const e = getRandomInt(-5, 5);
+                // Вычисляем f так, чтобы d*x + e >= f было верно для solutionX
+                const f = d * solutionX + e;
+                
+                const sign1 = '>';
+                const sign2 = '>=';
+                
+                const ineq1 = `\\log_{${k}}(${formatLinear(a, b)})${sign1}${c}`;
+                const ineq2 = `${formatLinear(d, e)}${sign2}${f}`;
+                const question = `\\begin{cases}${ineq1}\\\\${ineq2}\\end{cases}`;
+                
+                return { 
+                    question, 
+                    correct: solutionX,
+                    description: `Решение: x = ${solutionX}` 
+                };
+            }
+            
+            // Генерация системы с двумя переменными с гарантированным решением
+            function generateTwoVariableSystem() {
+                // Шаг 1: Выбираем конкретное решение (x, y)
+                const solutionX = getRandomInt(-5, 5);
+                const solutionY = getRandomInt(-5, 5);
+                
+                // Шаг 2: Создаем линейное неравенство ax + by > c так, чтобы оно было верно для (x, y)
+                const a1 = getRandomInt(1, 5);
+                const b1 = getRandomInt(1, 5);
+                // Вычисляем c1 так, чтобы a1*x + b1*y > c1 было верно для нашей точки
+                const c1 = a1 * solutionX + b1 * solutionY - getRandomInt(1, 3);
+                
+                // Шаг 3: Создаем второе линейное неравенство dx + ey <= f так, чтобы оно было верно для (x, y)
+                const d = getRandomInt(1, 5);
+                const e = getRandomInt(1, 5);
+                // Вычисляем f так, чтобы d*x + e*y <= f было верно для нашей точки
+                const f = d * solutionX + e * solutionY;
+                
+                const sign1 = '>';
+                const sign2 = '<=';
+                
+                const ineq1 = `${a1}x + ${b1}y${sign1}${c1}`;
+                const ineq2 = `${d}x + ${e}y${sign2}${f}`;
+                const question = `\\begin{cases}${ineq1}\\\\${ineq2}\\end{cases}`;
+                
+                return { 
+                    question, 
+                    correct: [solutionX, solutionY],
+                    isTwoVariable: true,
+                    description: `Решение: (${solutionX}, ${solutionY})` 
+                };
+            }
+            
+            // Генерация неправильных ответов
+            function generateWrongAnswers(correct, isTwoVariable = false) {
+                const wrongAnswers = new Set();
+                while (wrongAnswers.size < 3) {
+                    if (isTwoVariable) {
+                        const variationX = getRandomInt(-2, 2);
+                        const variationY = getRandomInt(-2, 2);
+                        const newX = correct[0] + variationX;
+                        const newY = correct[1] + variationY;
+                        if (variationX !== 0 || variationY !== 0) {
+                            wrongAnswers.add(JSON.stringify([newX, newY]));
+                        }
+                    } else {
+                        const variation = getRandomInt(-2, 2);
+                        const newAnswer = correct + variation;
+                        if (variation !== 0) {
+                            wrongAnswers.add(newAnswer);
+                        }
+                    }
+                }
+                return isTwoVariable ? Array.from(wrongAnswers).map(JSON.parse) : Array.from(wrongAnswers);
+            }
+            
+            // Генерация 25 задач (по 5 задач каждого типа)
+            const types = [
+                generateLinearSystem,
+                generateQuadraticSystem,
+                generateRationalSystem,
+                generateLogarithmicSystem,
+                generateTwoVariableSystem
+            ];
+            
+            for (let i = 0; i < 25; i++) {
+                const typeIndex = Math.floor(i / 5);
+                const generator = types[typeIndex];
+                const system = generator();
+                const correctAnswer = system.correct;
+                const wrongAnswers = generateWrongAnswers(correctAnswer, system.isTwoVariable);
+                
+                const answers = [correctAnswer, ...wrongAnswers].sort(() => Math.random() - 0.5);
+                
+                problems.push({
+                    question: system.question,
+                    correct: correctAnswer,
+                    answers: answers,
+                    isTwoVariable: system.isTwoVariable,
+                    description: system.description
+                });
+            }
+            
+            return problems;
+        }
+
+        // Глобальные переменные для хранения задач и правильных ответов
+        let generatedProblems = [];
+        let correctAnswersMap = {};
+
+        // Отображение задач
+        function displayProblems() {
+            generatedProblems = generateSystemOfInequalitiesProblems();
+            const form = document.getElementById('system-inequality-test');
+            form.innerHTML = '';
+            
+            generatedProblems.forEach((problem, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                const questionText = document.createElement('div');
+                questionText.className = 'question-text';
+                questionText.innerHTML = `${index + 1}. Теңсіздіктер жүйесінің шешімін табыңыз:`;
+                
+                const mathExpression = document.createElement('div');
+                mathExpression.className = 'math-expression';
+                mathExpression.innerHTML = `$$${problem.question}$$`;
+                
+                const options = document.createElement('div');
+                options.className = 'options';
+                
+                // Формируем варианты ответов
+                let optionsHTML = '';
+                if (problem.isTwoVariable) {
+                    problem.answers.forEach((answer, i) => {
+                        optionsHTML += `
+                            <label class="option">
+                                <input type="radio" name="q${index + 1}" value="${String.fromCharCode(97 + i)}" required>
+                                ${String.fromCharCode(97 + i)}) (${answer[0]}, ${answer[1]})
+                            </label>
+                        `;
+                    });
+                } else {
+                    problem.answers.forEach((answer, i) => {
+                        optionsHTML += `
+                            <label class="option">
+                                <input type="radio" name="q${index + 1}" value="${String.fromCharCode(97 + i)}" required>
+                                ${String.fromCharCode(97 + i)}) x = ${answer}
+                            </label>
+                        `;
+                    });
+                }
+                options.innerHTML = optionsHTML;
+                
+                questionDiv.appendChild(questionText);
+                questionDiv.appendChild(mathExpression);
+                questionDiv.appendChild(options);
+                
+                // Сохраняем правильный ответ
+                correctAnswersMap[`q${index + 1}`] = {
+                    correctIndex: String.fromCharCode(97 + problem.answers.findIndex(a => 
+                        problem.isTwoVariable ? 
+                            a[0] === problem.correct[0] && a[1] === problem.correct[1] : 
+                            a === problem.correct
+                    )),
+                    correctAnswer: problem.correct,
+                    isTwoVariable: problem.isTwoVariable,
+                    description: problem.description
+                };
+                
+                form.appendChild(questionDiv);
+            });
+
+            // Кнопка завершения теста
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'btn-container';
+            btnContainer.innerHTML = '<button type="button" class="btn" onclick="checkTest()">Тестті аяқтау</button>';
+            form.appendChild(btnContainer);
+            
+            // Перерисовываем формулы с помощью MathJax
+            MathJax.Hub.Queue(["Typeset", MathJax.Hub]);
+        }
+
+        // Проверка теста
+        function checkTest() {
+            let score = 0;
+            const form = document.getElementById('system-inequality-test');
+            const resultContainer = document.getElementById('result');
+            
+            // Проверяем каждый вопрос
+            for (let i = 1; i <= 25; i++) {
+                const questionName = `q${i}`;
+                const selectedOption = form.elements[questionName]?.value;
+                const correctAnswerData = correctAnswersMap[questionName];
+                
+                // Проверяем, совпадает ли выбранный ответ с правильным
+                if (selectedOption === correctAnswerData.correctIndex) {
+                    score++;
+                }
+            }
+            
+            // Показываем результаты
+            document.getElementById('score').textContent = score;
+            
+            const percentage = (score / 25) * 100;
+            const resultMessage = document.getElementById('result-message');
+            if (percentage >= 85) {
+                resultMessage.textContent = "Тамаша нәтиже! Сіз теңсіздіктер жүйесін жақсы білесіз.";
+            } else if (percentage >= 50) {
+                resultMessage.textContent = "Жақсы нәтиже! Кішкене қателерді түзетуге болады.";
+            } else {
+                resultMessage.textContent = "Материалды қайталап, тағы да көріңіз. Сіз жақсырақ жасай аласыз!";
+            }
+            
+            form.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+
+        // Инициализация при загрузке
+        window.onload = displayProblems;
+    </script>
+</body>
+</html>
