@@ -3,7 +3,9 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Рационал теңдеулер - ҰБТ тақырыптары бойыншы математикалық есептер</title>
+    <title>Рационал теңдеулер - ҰБТ математика</title>
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -92,37 +94,10 @@
             margin-bottom: 15px;
         }
         
-        .equation {
-            font-family: 'Times New Roman', serif;
-            font-size: 1.2rem;
-            margin: 10px 0;
-            padding: 10px;
-            background-color: #f8f9fa;
-            border-radius: 5px;
-            text-align: center;
-        }
-        
-        .fraction {
-            display: inline-block;
-            vertical-align: middle;
-            text-align: center;
-            margin: 0 5px;
-        }
-        
-        .numerator, .denominator {
-            display: block;
-            padding: 0 5px;
-        }
-        
-        .denominator {
-            border-top: 1px solid #333;
-        }
-        
         .options {
             display: grid;
-            grid-template-columns: 1fr;
+            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
             gap: 12px;
-            margin-top: 15px;
         }
         
         .option {
@@ -131,11 +106,10 @@
             padding: 10px;
             border-radius: 5px;
             transition: background-color 0.2s;
-            background-color: #f8f9fa;
         }
         
         .option:hover {
-            background-color: #e9f0f8;
+            background-color: #f0f7ff;
         }
         
         .option input {
@@ -155,7 +129,6 @@
             cursor: pointer;
             font-size: 1rem;
             transition: background-color 0.3s;
-            margin-top: 20px;
         }
         
         .btn:hover {
@@ -167,14 +140,14 @@
             margin-top: 30px;
         }
         
-        .test-result {
+        .result-container {
+            display: none;
             background-color: #f0f9ff;
             border-radius: 10px;
             padding: 25px;
             margin-top: 30px;
             text-align: center;
             border: 1px solid #dbeafe;
-            display: none;
         }
         
         .result-title {
@@ -183,7 +156,7 @@
             margin-bottom: 15px;
         }
         
-        .test-score {
+        .score {
             font-size: 1.8rem;
             font-weight: bold;
             color: #2563eb;
@@ -196,6 +169,13 @@
             padding: 25px 0;
             text-align: center;
             margin-top: 50px;
+        }
+
+        .error-message {
+            color: red;
+            text-align: center;
+            padding: 20px;
+            font-size: 1.2rem;
         }
     </style>
 </head>
@@ -218,310 +198,483 @@
     
     <div class="container">
         <div class="test-container">
-            <form id="rational-equations-test">
-                <div id="questions-container"></div>
-                
+            <form id="rational-test">
                 <div class="btn-container">
-                    <button type="button" class="btn" id="check-results">Тестті аяқтау</button>
-                </div>
-                
-                <div class="test-result" id="test-result">
-                    <h3 class="result-title">Тест нәтижесі</h3>
-                    <div class="test-score">Сіздің нәтижеңіз: <span id="score">0</span>/25</div>
-                    <p id="result-message"></p>
-                    <button class="btn" onclick="resetTest()">Қайта бастау</button>
-                    <button class="btn" onclick="window.location.href='algeb.html'" style="margin-left: 10px;">Бөлімдерге оралу</button>
+                    <button type="button" class="btn" onclick="checkTest()">Тестті аяқтау</button>
                 </div>
             </form>
+            
+            <div class="result-container" id="result">
+                <h3 class="result-title">Тест нәтижесі</h3>
+                <div class="score">Сіздің нәтижеңіз: <span id="score">0</span>/25</div>
+                <p id="result-message"></p>
+                <button class="btn" onclick="window.location.href='algeb.html'" style="margin-top: 20px;">Бөлімдерге оралу</button>
+            </div>
         </div>
     </div>
     
     <footer class="footer">
         <div class="container">
-            <p>© 2023 Математика тестілері</p>
+            <p>© 404 Found Group.</p>
         </div>
     </footer>
-    
-   <script>
-    // Глобальные переменные
-    let generatedProblems = [];
-    let correctAnswersMap = {};
 
-    // Генерация случайного целого числа
-    function getRandomInt(min, max) {
-        return Math.floor(Math.random() * (max - min + 1)) + min;
-    }
-    
-    // Генерация дробного числа с одним знаком после запятой
-    function getRandomDecimal(min, max) {
-        return Math.round((Math.random() * (max - min) + min) * 10) / 10;
-    }
+    <script>
+        // Глобальные переменные
+        let generatedProblems = [];
+        let correctAnswersMap = {};
 
-    // Форматирование дроби в HTML
-    function formatFraction(numerator, denominator) {
-        return `
-            <span class="fraction">
-                <span class="numerator">${numerator}</span>
-                <span class="denominator">${denominator}</span>
-            </span>
-        `;
-    }
+        // Функция генерации задач
+        function generateRationalEquationsProblems() {
+            const problems = [];
+            
+            // Функция для генерации случайного числа в диапазоне
+            function getRandomInt(min, max) {
+                return Math.floor(Math.random() * (max - min + 1)) + min;
+            }
+            
+            // Форматирование дроби для LaTeX
+            function formatFraction(num, denom) {
+                return `\\frac{${num}}{${denom}}`;
+            }
+            
+            // Форматирование линейного выражения (ax + b)
+            function formatLinear(a, b) {
+                if (a === 0) return `${b}`;
+                if (b === 0) return `${a}x`;
+                return `${a}x${b > 0 ? '+' : ''}${b}`;
+            }
+            
+            // Форматирование квадратичного выражения (x^2 + px + q)
+            function formatQuadratic(p, q) {
+                if (p === 0 && q === 0) return `x^2`;
+                if (p === 0) return `x^2${q > 0 ? '+' : ''}${q}`;
+                if (q === 0) return `x^2${p > 0 ? '+' : ''}${p}x`;
+                return `x^2${p > 0 ? '+' : ''}${p}x${q > 0 ? '+' : ''}${q}`;
+            }
+            
+            // Упрощение дроби
+            function simplifyFraction(num, denom) {
+                const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
+                const divisor = gcd(Math.abs(num), Math.abs(denom));
+                return [num / divisor, denom / divisor];
+            }
+            
+            // Генерация простого уравнения: (ax + b)/(cx + d) = k
+            function generateSimpleRationalEquation() {
+                const a = getRandomInt(1, 5);
+                const b = getRandomInt(-5, 5);
+                const c = getRandomInt(1, 5);
+                const d = getRandomInt(-5, 5);
+                const k = getRandomInt(-5, 5);
+                
+                // Решаем уравнение: (ax + b)/(cx + d) = k
+                // ax + b = k(cx + d)
+                // ax + b = kcx + kd
+                // ax - kcx = kd - b
+                // x(a - kc) = kd - b
+                // x = (kd - b)/(a - kc)
+                const denom = a - k * c;
+                const num = k * d - b;
+                if (denom === 0 || num === 0) return null; // Избегаем деления на ноль
+                
+                const [simplifiedNum, simplifiedDenom] = simplifyFraction(num, denom);
+                if (simplifiedDenom < 0) {
+                    return simplifyFraction(-simplifiedNum, -simplifiedDenom);
+                }
+                if (Math.abs(simplifiedDenom) > 5 || c * simplifiedNum + d * simplifiedDenom === 0) return null;
 
-    // Форматирование линейного или квадратного выражения
-    function formatExpression(a, b, isQuadratic = false) {
-        let parts = [];
-        
-        if (isQuadratic) {
-            if (a !== 0) parts.push(a === 1 ? "x²" : a === -1 ? "-x²" : `${a}x²`);
-            if (b !== 0) parts.push(b > 0 ? `+ ${b}x` : `- ${Math.abs(b)}x`);
-        } else {
-            if (a !== 0) parts.push(a === 1 ? "x" : a === -1 ? "-x" : `${a}x`);
-            if (b !== 0) parts.push(b > 0 ? `+ ${b}` : `- ${Math.abs(b)}`);
+                const left = formatFraction(formatLinear(a, b), formatLinear(c, d));
+                const right = `${k}`;
+                return { question: `${left}=${right}`, correct: [simplifiedNum, simplifiedDenom] };
+            }
+            
+            // Генерация уравнения с суммой дробей: (ax + b)/(cx + d) + (px + q)/(rx + s) = 0
+            function generateSumRationalEquation() {
+                const a = getRandomInt(1, 5);
+                const b = getRandomInt(-5, 5);
+                const c = getRandomInt(1, 5);
+                const d = getRandomInt(-5, 5);
+                const p = getRandomInt(1, 5);
+                const q = getRandomInt(-5, 5);
+                const r = getRandomInt(1, 5);
+                const s = getRandomInt(-5, 5);
+                
+                // Решаем: (ax + b)/(cx + d) + (px + q)/(rx + s) = 0
+                // (ax + b)(rx + s) + (px + q)(cx + d) = 0
+                // (arx^2 + asx + brx + bs) + (pcx^2 + pdx + qcx + qd) = 0
+                // (ar + pc)x^2 + (as + br + pd + qc)x + (bs + qd) = 0
+                const A = a * r + p * c;
+                const B = a * s + b * r + p * d + q * c;
+                const C = b * s + q * d;
+                
+                // Решаем квадратное уравнение: Ax^2 + Bx + C = 0
+                const discriminant = B * B - 4 * A * C;
+                if (discriminant < 0 || A === 0) return null;
+                
+                const sqrtD = Math.sqrt(discriminant);
+                const x1Num = -B + sqrtD;
+                const x1Denom = 2 * A;
+                const x2Num = -B - sqrtD;
+                const x2Denom = 2 * A;
+                
+                // Проверяем, является ли x1 подходящим решением
+                let num = Math.round(x1Num);
+                let denom = Math.round(x1Denom);
+                if (Math.abs(x1Num - num) > 0.001 || Math.abs(x1Denom - denom) > 0.001) {
+                    num = Math.round(x2Num);
+                    denom = Math.round(x2Denom);
+                    if (Math.abs(x2Num - num) > 0.001 || Math.abs(x2Denom - denom) > 0.001) return null;
+                }
+                
+                [num, denom] = simplifyFraction(num, denom);
+                if (denom < 0) { num = -num; denom = -denom; }
+                if (Math.abs(denom) > 5 || c * num + d * denom === 0 || r * num + s * denom === 0) return null;
+
+                const left = `${formatFraction(formatLinear(a, b), formatLinear(c, d))}+${formatFraction(formatLinear(p, q), formatLinear(r, s))}`;
+                const right = `0`;
+                return { question: `${left}=${right}`, correct: [num, denom] };
+            }
+            
+            // Генерация уравнения с квадратичным знаменателем: (ax + b)/(x^2 + px + q) = k
+            function generateQuadraticDenomEquation() {
+                const a = getRandomInt(1, 5);
+                const b = getRandomInt(-5, 5);
+                const p = getRandomInt(-5, 5);
+                const q = getRandomInt(-5, 5);
+                const k = getRandomInt(-5, 5);
+                
+                // Решаем: (ax + b)/(x^2 + px + q) = k
+                // ax + b = k(x^2 + px + q)
+                // kx^2 + (kp - a)x + (kq - b) = 0
+                const A = k;
+                const B = k * p - a;
+                const C = k * q - b;
+                
+                if (A === 0) return null;
+                const discriminant = B * B - 4 * A * C;
+                if (discriminant < 0) return null;
+                
+                const sqrtD = Math.sqrt(discriminant);
+                const x1Num = -B + sqrtD;
+                const x1Denom = 2 * A;
+                const x2Num = -B - sqrtD;
+                const x2Denom = 2 * A;
+                
+                let num = Math.round(x1Num);
+                let denom = Math.round(x1Denom);
+                if (Math.abs(x1Num - num) > 0.001 || Math.abs(x1Denom - denom) > 0.001) {
+                    num = Math.round(x2Num);
+                    denom = Math.round(x2Denom);
+                    if (Math.abs(x2Num - num) > 0.001 || Math.abs(x2Denom - denom) > 0.001) return null;
+                }
+                
+                [num, denom] = simplifyFraction(num, denom);
+                if (denom < 0) { num = -num; denom = -denom; }
+                if (Math.abs(denom) > 5 || num * num + p * num * denom + q * denom * denom === 0) return null;
+
+                const left = formatFraction(formatLinear(a, b), formatQuadratic(p, q));
+                const right = `${k}`;
+                return { question: `${left}=${right}`, correct: [num, denom] };
+            }
+            
+            // Генерация уравнения с дробями с обеих сторон: (ax + b)/(cx + d) = (px + q)/(rx + s), один ответ
+            function generateDoubleRationalEquationSingle() {
+                const a = getRandomInt(1, 5);
+                const b = getRandomInt(-5, 5);
+                const c = getRandomInt(1, 5);
+                const d = getRandomInt(-5, 5);
+                const p = getRandomInt(1, 5);
+                const q = getRandomInt(-5, 5);
+                const r = getRandomInt(1, 5);
+                const s = getRandomInt(-5, 5);
+                
+                // Решаем: (ax + b)/(cx + d) = (px + q)/(rx + s)
+                // (ax + b)(rx + s) = (px + q)(cx + d)
+                // arx^2 + asx + brx + bs = pcx^2 + pdx + qcx + qd
+                // (ar - pc)x^2 + (as + br - pd - qc)x + (bs - qd) = 0
+                const A = a * r - p * c;
+                const B = a * s + b * r - p * d - q * c;
+                const C = b * s - q * d;
+                
+                if (A === 0) return null;
+                const discriminant = B * B - 4 * A * C;
+                if (discriminant < 0) return null;
+                
+                const sqrtD = Math.sqrt(discriminant);
+                const x1Num = -B + sqrtD;
+                const x1Denom = 2 * A;
+                const x2Num = -B - sqrtD;
+                const x2Denom = 2 * A;
+                
+                let num = Math.round(x1Num);
+                let denom = Math.round(x1Denom);
+                if (Math.abs(x1Num - num) > 0.001 || Math.abs(x1Denom - denom) > 0.001) {
+                    num = Math.round(x2Num);
+                    denom = Math.round(x2Denom);
+                    if (Math.abs(x2Num - num) > 0.001 || Math.abs(x2Denom - denom) > 0.001) return null;
+                }
+                
+                [num, denom] = simplifyFraction(num, denom);
+                if (denom < 0) { num = -num; denom = -denom; }
+                if (Math.abs(denom) > 5 || c * num + d * denom === 0 || r * num + s * denom === 0) return null;
+
+                const left = formatFraction(formatLinear(a, b), formatLinear(c, d));
+                const right = formatFraction(formatLinear(p, q), formatLinear(r, s));
+                return { question: `${left}=${right}`, correct: [num, denom] };
+            }
+            
+            // Генерация уравнения с двумя ответами: (ax + b)/(cx + d) = (px + q)/(rx + s)
+            function generateDoubleRationalEquationDouble() {
+                const a = getRandomInt(1, 5);
+                const b = getRandomInt(-5, 5);
+                const c = getRandomInt(1, 5);
+                const d = getRandomInt(-5, 5);
+                const p = getRandomInt(1, 5);
+                const q = getRandomInt(-5, 5);
+                const r = getRandomInt(1, 5);
+                const s = getRandomInt(-5, 5);
+                
+                // Решаем: (ax + b)/(cx + d) = (px + q)/(rx + s)
+                const A = a * r - p * c;
+                const B = a * s + b * r - p * d - q * c;
+                const C = b * s - q * d;
+                
+                if (A === 0) return null;
+                const discriminant = B * B - 4 * A * C;
+                if (discriminant <= 0) return null;
+                
+                const sqrtD = Math.sqrt(discriminant);
+                const x1Num = -B + sqrtD;
+                const x1Denom = 2 * A;
+                const x2Num = -B - sqrtD;
+                const x2Denom = 2 * A;
+                
+                const num1 = Math.round(x1Num);
+                const denom1 = Math.round(x1Denom);
+                const num2 = Math.round(x2Num);
+                const denom2 = Math.round(x2Denom);
+                
+                if (Math.abs(x1Num - num1) > 0.001 || Math.abs(x1Denom - denom1) > 0.001 ||
+                    Math.abs(x2Num - num2) > 0.001 || Math.abs(x2Denom - denom2) > 0.001 ||
+                    num1 / denom1 === num2 / denom2) return null;
+                
+                let [simplifiedNum1, simplifiedDenom1] = simplifyFraction(num1, denom1);
+                let [simplifiedNum2, simplifiedDenom2] = simplifyFraction(num2, denom2);
+                if (simplifiedDenom1 < 0) { simplifiedNum1 = -simplifiedNum1; simplifiedDenom1 = -simplifiedDenom1; }
+                if (simplifiedDenom2 < 0) { simplifiedNum2 = -simplifiedNum2; simplifiedDenom2 = -simplifiedDenom2; }
+                
+                if (Math.abs(simplifiedDenom1) > 5 || Math.abs(simplifiedDenom2) > 5 ||
+                    c * simplifiedNum1 + d * simplifiedDenom1 === 0 || r * simplifiedNum1 + s * simplifiedDenom1 === 0 ||
+                    c * simplifiedNum2 + d * simplifiedDenom2 === 0 || r * simplifiedNum2 + s * simplifiedDenom2 === 0) return null;
+
+                const left = formatFraction(formatLinear(a, b), formatLinear(c, d));
+                const right = formatFraction(formatLinear(p, q), formatLinear(r, s));
+                return { question: `${left}=${right}`, correct: [[simplifiedNum1, simplifiedDenom1], [simplifiedNum2, simplifiedDenom2]], isTwoAnswer: true };
+            }
+            
+            // Генерация неправильных ответов
+            function generateWrongAnswers(correct, isTwoAnswer = false) {
+                const wrongAnswers = new Set();
+                while (wrongAnswers.size < 3) {
+                    if (isTwoAnswer) {
+                        const variation1 = getRandomInt(-2, 2);
+                        const variation2 = getRandomInt(-2, 2);
+                        const newAnswer1 = [correct[0][0] + variation1, correct[0][1]];
+                        const newAnswer2 = [correct[1][0] + variation2, correct[1][1]];
+                        if (variation1 !== 0 || variation2 !== 0) {
+                            wrongAnswers.add(JSON.stringify([newAnswer1, newAnswer2]));
+                        }
+                    } else {
+                        const variation = getRandomInt(-2, 2);
+                        const newNum = correct[0] + variation;
+                        if (variation !== 0 && newNum !== 0) {
+                            wrongAnswers.add(JSON.stringify([newNum, correct[1]]));
+                        }
+                    }
+                }
+                return isTwoAnswer ? Array.from(wrongAnswers).map(JSON.parse) : Array.from(wrongAnswers);
+            }
+            
+            // Генерация 25 задач
+            const types = [
+                generateSimpleRationalEquation,
+                generateSumRationalEquation,
+                generateQuadraticDenomEquation,
+                generateDoubleRationalEquationSingle,
+                generateDoubleRationalEquationDouble
+            ];
+            
+            let i = 0;
+            while (problems.length < 25 && i < 1000) { // Ограничение на общее количество попыток
+                const typeIndex = Math.floor(problems.length / 5);
+                const generator = types[typeIndex];
+                const equation = generator();
+                if (equation) {
+                    const correctAnswer = equation.correct;
+                    const wrongAnswers = generateWrongAnswers(correctAnswer, equation.isTwoAnswer);
+                    
+                    const answers = [correctAnswer, ...wrongAnswers].sort((a, b) => {
+                        if (Array.isArray(a[0]) && Array.isArray(b[0])) {
+                            return (a[0][0] / a[0][1]) - (b[0][0] / b[0][1]);
+                        }
+                        return (a[0] / a[1]) - (b[0] / b[1]);
+                    });
+                    
+                    problems.push({
+                        question: equation.question,
+                        correct: correctAnswer,
+                        answers: answers,
+                        isTwoAnswer: equation.isTwoAnswer
+                    });
+                }
+                i++;
+            }
+            
+            if (problems.length < 25) {
+                console.error(`Generated only ${problems.length} problems`);
+            }
+            return problems;
         }
-        
-        let expr = parts.join(" ");
-        if (expr.startsWith("+ ")) expr = expr.substring(2);
-        return expr || "0";
-    }
 
-    // Генерация простого рационального уравнения
-    function generateSimpleEquation() {
-        let a, b, c, d, k, x;
-        let attempts = 0;
-        
-        do {
-            a = getRandomInt(1, 5);
-            b = getRandomInt(-5, 5);
-            c = getRandomInt(1, 5);
-            d = getRandomInt(-5, 5);
-            
-            // 70% целых решений, 30% дробных
-            x = Math.random() < 0.7 ? getRandomInt(-5, 5) : getRandomDecimal(-5, 5);
-            
-            // Проверяем, чтобы знаменатель не был равен нулю
-            if (c * x + d === 0) continue;
-            
-            k = (a * x + b) / (c * x + d);
-            k = Math.round(k * 10) / 10; // Округляем до одного знака
-            
-            // Проверяем, чтобы k было "красивым" числом
-            if (Number.isInteger(k) || (k * 10) % 1 === 0) {
-                break;
-            }
-            
-            attempts++;
-            if (attempts > 50) {
-                // Если долго не получается, генерируем целое решение
-                x = getRandomInt(-5, 5);
-                if (c * x + d !== 0) {
-                    k = (a * x + b) / (c * x + d);
-                    k = Math.round(k * 10) / 10;
-                    break;
+        // Генерация и отображение вопросов
+        function displayProblems() {
+            try {
+                generatedProblems = generateRationalEquationsProblems();
+                if (!generatedProblems || generatedProblems.length === 0) {
+                    throw new Error('No problems generated');
                 }
-            }
-        } while (true);
-        
-        const numerator = formatExpression(a, b);
-        const denominator = formatExpression(c, d);
-        const equation = formatFraction(numerator, denominator);
-        
-        return {
-            question: `${equation} = ${k}`,
-            answer: x,
-            type: Number.isInteger(x) ? 'integer' : 'decimal'
-        };
-    }
 
-    // Генерация квадратного уравнения с двумя решениями
-    function generateQuadraticEquation() {
-        let x1, x2;
-        do {
-            x1 = getRandomInt(-5, 5);
-            x2 = getRandomInt(-5, 5);
-        } while (x1 === x2);
-        
-        // Формируем знаменатель (x² + bx + c)
-        const b = -(x1 + x2);
-        const c = x1 * x2;
-        
-        // Подбираем числитель (ax + d)
-        const a = getRandomInt(1, 3);
-        const d = getRandomInt(-5, 5);
-        
-        const numerator = formatExpression(a, d);
-        const denominator = formatExpression(1, b, true); // 1x² + bx
-        
-        return {
-            question: `${formatFraction(numerator, denominator)} = 0`,
-            answer: [x1, x2],
-            type: 'multiple'
-        };
-    }
+                const form = document.getElementById('rational-test');
+                const btnContainer = form.querySelector('.btn-container');
+                form.innerHTML = '';
+                form.appendChild(btnContainer);
 
-    // Генерация неправильных ответов
-    function generateWrongAnswers(correctAnswer, answerType) {
-        const wrongAnswers = new Set();
-        
-        if (answerType === 'multiple') {
-            // Для уравнений с двумя решениями
-            while (wrongAnswers.size < 3) {
-                const x = getRandomInt(-5, 5);
-                if (x !== correctAnswer[0] && x !== correctAnswer[1]) {
-                    wrongAnswers.add(x);
-                }
-            }
-            return Array.from(wrongAnswers).map(x => `x=${x}`);
-        } else {
-            // Для уравнений с одним решением
-            while (wrongAnswers.size < 3) {
-                let wrongAnswer;
-                if (answerType === 'integer') {
-                    wrongAnswer = correctAnswer + getRandomInt(-2, 2);
-                    if (wrongAnswer === correctAnswer) continue;
+                generatedProblems.forEach((problem, index) => {
+                    const questionDiv = document.createElement('div');
+                    questionDiv.className = 'question';
+                    
+                    const questionText = document.createElement('div');
+                    questionText.className = 'question-text';
+                    questionText.innerHTML = `${index + 1}. Теңдеуді шешіңіз: \\(${problem.question}\\)${problem.isTwoAnswer ? '<br><small>(Ескерту: екі жауап болуы мүмкін)</small>' : ''}`;
+                    
+                    const optionsDiv = document.createElement('div');
+                    optionsDiv.className = 'options';
+
+                    problem.answers.forEach((answer, i) => {
+                        const label = document.createElement('label');
+                        label.className = 'option';
+                        
+                        const input = document.createElement('input');
+                        input.type = 'radio';
+                        input.name = `q${index + 1}`;
+                        input.value = String.fromCharCode(97 + i);
+                        input.required = true;
+                        
+                        const answerText = document.createElement('span');
+                        if (problem.isTwoAnswer) {
+                            const [num1, denom1] = answer[0];
+                            const [num2, denom2] = answer[1];
+                            answerText.innerHTML = `${String.fromCharCode(97 + i)}) \\(${denom1 === 1 ? num1 : formatFraction(num1, denom1)}, ${denom2 === 1 ? num2 : formatFraction(num2, denom2)}\\)`;
+                        } else {
+                            const [num, denom] = answer;
+                            answerText.innerHTML = `${String.fromCharCode(97 + i)}) \\(${denom === 1 ? num : formatFraction(num, denom)}\\)`;
+                        }
+                        
+                        label.appendChild(input);
+                        label.appendChild(answerText);
+                        optionsDiv.appendChild(label);
+                    });
+
+                    // Сохраняем правильный ответ
+                    correctAnswersMap[`q${index + 1}`] = String.fromCharCode(
+                        97 + problem.answers.findIndex(a => 
+                            JSON.stringify(a) === JSON.stringify(problem.correct)
+                        )
+                    );
+
+                    questionDiv.appendChild(questionText);
+                    questionDiv.appendChild(optionsDiv);
+                    form.insertBefore(questionDiv, btnContainer);
+                });
+
+                // Перерендер MathJax
+                if (window.MathJax) {
+                    MathJax.typesetPromise().catch(err => {
+                        console.error('MathJax rendering failed:', err);
+                        const form = document.getElementById('rational-test');
+                        form.innerHTML = '<div class="error-message">Ошибка рендеринга формул. Пожалуйста, обновите страницу.</div>';
+                    });
                 } else {
-                    wrongAnswer = correctAnswer + (Math.random() > 0.5 ? 0.5 : -0.5);
-                    wrongAnswer = Math.round(wrongAnswer * 10) / 10;
-                    if (wrongAnswer === correctAnswer) continue;
+                    throw new Error('MathJax not loaded');
                 }
-                wrongAnswers.add(wrongAnswer);
+            } catch (error) {
+                console.error('Error in displayProblems:', error);
+                const form = document.getElementById('rational-test');
+                form.innerHTML = '<div class="error-message">Ошибка генерации теста: ' + error.message + '. Пожалуйста, обновите страницу.</div>';
             }
-            return Array.from(wrongAnswers).map(x => `x=${x}`);
         }
-    }
 
-    // Генерация всех задач для теста
-    function generateAllProblems() {
-        const problems = [];
-        
-        for (let i = 0; i < 25; i++) {
-            let problem;
-            // 80% простых уравнений, 20% квадратных
-            if (Math.random() < 0.8) {
-                problem = generateSimpleEquation();
-            } else {
-                problem = generateQuadraticEquation();
+        // Проверка теста
+        function checkTest() {
+            try {
+                let score = 0;
+                const form = document.getElementById('rational-test');
+                const resultContainer = document.getElementById('result');
+                
+                generatedProblems.forEach((problem, index) => {
+                    const questionName = `q${index + 1}`;
+                    const selectedOption = form.elements[questionName]?.value;
+                    if (selectedOption === correctAnswersMap[questionName]) {
+                        score++;
+                    }
+                });
+
+                // Показ результатов
+                document.getElementById('score').textContent = score;
+                const percentage = (score / 25) * 100;
+                const resultMessage = document.getElementById('result-message');
+                
+                if (percentage >= 90) {
+                    resultMessage.textContent = "Тамаша! Сіз рационал теңдеулерді жетік шешесіз!";
+                } else if (percentage >= 60) {
+                    resultMessage.textContent = "Жақсы! Кейбір қателерді түзету қажет.";
+                } else {
+                    resultMessage.textContent = "Қайталап көріңіз. Нәтижені жақсарта аласыз!";
+                }
+
+                form.style.display = 'none';
+                resultContainer.style.display = 'block';
+                resultContainer.scrollIntoView({ behavior: 'smooth' });
+            } catch (error) {
+                console.error('Error in checkTest:', error);
+                const resultContainer = document.getElementById('result');
+                resultContainer.innerHTML = '<div class="error-message">Ошибка при проверке теста. Пожалуйста, обновите страницу.</div>';
+                resultContainer.style.display = 'block';
             }
-            
-            // Генерируем неправильные ответы
-            const wrongAnswers = generateWrongAnswers(problem.answer, problem.type);
-            
-            // Формируем все варианты ответов
-            let answers;
-            if (problem.type === 'multiple') {
-                answers = [
-                    `x₁=${problem.answer[0]}, x₂=${problem.answer[1]}`,
-                    ...wrongAnswers
-                ];
+        }
+
+        // Ожидание полной загрузки MathJax
+        function waitForMathJax(callback) {
+            if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise) {
+                window.MathJax.startup.promise.then(() => {
+                    callback();
+                }).catch(err => {
+                    console.error('MathJax startup failed:', err);
+                    const form = document.getElementById('rational-test');
+                    form.innerHTML = '<div class="error-message">MathJax не загрузился. Пожалуйста, обновите страницу.</div>';
+                });
             } else {
-                answers = [
-                    `x=${problem.answer}`,
-                    ...wrongAnswers
-                ];
+                setTimeout(() => waitForMathJax(callback), 100);
             }
-            
-            // Перемешиваем ответы
-            answers = answers.sort(() => Math.random() - 0.5);
-            
-            // Находим индекс правильного ответа
-            const correctIndex = answers.findIndex(ans => 
-                problem.type === 'multiple' 
-                    ? ans.startsWith(`x₁=${problem.answer[0]}`)
-                    : ans === `x=${problem.answer}`
-            );
-            
-            problems.push({
-                question: problem.question,
-                answers: answers,
-                correctIndex: correctIndex,
-                type: problem.type
+        }
+
+        // Инициализация при загрузке
+        window.onload = () => {
+            waitForMathJax(() => {
+                displayProblems();
             });
-        }
-        
-        return problems;
-    }
-
-    // Отображение теста на странице
-    function displayTest() {
-        generatedProblems = generateAllProblems();
-        const container = document.getElementById('questions-container');
-        container.innerHTML = '';
-        
-        generatedProblems.forEach((problem, index) => {
-            const questionDiv = document.createElement('div');
-            questionDiv.className = 'question';
-            
-            questionDiv.innerHTML = `
-                <div class="question-text">${index + 1}. Теңдеуді шешіңіз:</div>
-                <div class="equation">${problem.question}</div>
-                <div class="options">
-                    ${problem.answers.map((answer, i) => `
-                        <label class="option">
-                            <input type="radio" name="q${index}" value="${String.fromCharCode(97 + i)}" required>
-                            ${String.fromCharCode(97 + i)}) ${answer}
-                        </label>
-                    `).join('')}
-                </div>
-            `;
-            
-            // Сохраняем правильный ответ (буква a, b, c или d)
-            correctAnswersMap[`q${index}`] = String.fromCharCode(97 + problem.correctIndex);
-            container.appendChild(questionDiv);
-        });
-        
-        // Показываем кнопку проверки и скрываем результаты
-        document.getElementById('check-results').style.display = 'inline-block';
-        document.getElementById('test-result').style.display = 'none';
-        document.getElementById('rational-equations-test').style.display = 'block';
-    }
-
-    // Проверка результатов теста
-    function checkResults() {
-        let score = 0;
-        const form = document.getElementById('rational-equations-test');
-        
-        // Проверяем каждый вопрос
-        for (let i = 0; i < 25; i++) {
-            const selectedOption = form.elements[`q${i}`]?.value;
-            if (selectedOption === correctAnswersMap[`q${i}`]) {
-                score++;
-            }
-        }
-        
-        // Отображаем результаты
-        document.getElementById('score').textContent = score;
-        
-        // Формируем сообщение в зависимости от результата
-        const percentage = (score / 25) * 100;
-        const resultMessage = document.getElementById('result-message');
-        
-        if (percentage >= 85) {
-            resultMessage.textContent = "Тамаша нәтиже! Сіз рационал теңдеулерді жақсы білесіз.";
-        } else if (percentage >= 50) {
-            resultMessage.textContent = "Жақсы нәтиже! Кішкене қателерді түзетуге болады.";
-        } else {
-            resultMessage.textContent = "Материалды қайталап, тағы да көріңіз. Сіз жақсырақ жасай аласыз!";
-        }
-        
-        // Показываем блок с результатами и скрываем форму
-        document.getElementById('test-result').style.display = 'block';
-        document.getElementById('check-results').style.display = 'none';
-        form.style.display = 'none';
-        
-        // Плавно прокручиваем к результатам
-        document.getElementById('test-result').scrollIntoView({ behavior: 'smooth' });
-    }
-
-    // Сброс и перезапуск теста
-    function resetTest() {
-        displayTest();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
-    }
-
-    // Инициализация при загрузке страницы
-    document.addEventListener('DOMContentLoaded', function() {
-        displayTest();
-        document.getElementById('check-results').addEventListener('click', checkResults);
-    });
-</script>
+        };
+    </script>
 </body>
 </html>
