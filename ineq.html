@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Теңсіздіктер - ҰБТ тақырыптары бойыншы математикалық есептер</title>
+    <title>Теңсіздіктер - ҰБТ тақырыптары бойынша математикалық есептер</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -168,6 +168,46 @@
             text-align: center;
             margin-top: 50px;
         }
+
+        /* Стили для таблицы показателей */
+        .progress-table-container {
+            display: none; /* Скрываем таблицу до завершения теста */
+            overflow-x: auto; /* Добавляем горизонтальную прокрутку */
+            margin-bottom: 30px;
+        }
+
+        .progress-table {
+            width: 100%;
+            min-width: 1700px; /* Минимальная ширина таблицы для прокрутки (40 столбцов) */
+            border-collapse: collapse;
+            background-color: white;
+            border: 1px solid #ddd;
+        }
+
+        .progress-table th, .progress-table td {
+            padding: 10px;
+            text-align: center;
+            border: 1px solid #ddd;
+        }
+
+        .progress-table th {
+            background-color: #f8f9fa;
+            font-weight: 500;
+        }
+
+        .progress-table td.correct {
+            background-color: #d4edda;
+            color: #155724;
+        }
+
+        .progress-table td.incorrect {
+            background-color: #f8d7da;
+            color: #721c24;
+        }
+
+        .progress-table .answered {
+            font-weight: bold;
+        }
     </style>
 </head>
 <body>
@@ -176,7 +216,6 @@
             <a href="index.html" class="logo">ҰБТ-Математика</a>
             <nav class="nav-menu">
                 <a href="index.html">Басты бет</a>
-                <a href="algeb.html">Алгебра</a>
                 <a href="algebra.html">Біз жайлы</a>
             </nav>
         </div>
@@ -196,6 +235,50 @@
             
             <div class="result-container" id="result">
                 <h3 class="result-title">Тест нәтижесі</h3>
+                <div class="progress-table-container" id="progress-table-container">
+                    <table class="progress-table">
+                        <thead>
+                            <tr>
+                                <th colspan="41">Тестілеу Деректері</th>
+                            </tr>
+                            <tr>
+                                <th>Тест тапсырмасы, реті</th>
+                                <th>1</th><th>2</th><th>3</th><th>4</th><th>5</th>
+                                <th>6</th><th>7</th><th>8</th><th>9</th><th>10</th>
+                                <th>11</th><th>12</th><th>13</th><th>14</th><th>15</th>
+                                <th>16</th><th>17</th><th>18</th><th>19</th><th>20</th>
+                                <th>21</th><th>22</th><th>23</th><th>24</th><th>25</th>
+                                <th>26</th><th>27</th><th>28</th><th>29</th><th>30</th>
+                                <th>31</th><th>32</th><th>33</th><th>34</th><th>35</th>
+                                <th>36</th><th>37</th><th>38</th><th>39</th><th>40</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td>Сіздің жауабыңыз</td>
+                                <td class="q1"></td><td class="q2"></td><td class="q3"></td><td class="q4"></td><td class="q5"></td>
+                                <td class="q6"></td><td class="q7"></td><td class="q8"></td><td class="q9"></td><td class="q10"></td>
+                                <td class="q11"></td><td class="q12"></td><td class="q13"></td><td class="q14"></td><td class="q15"></td>
+                                <td class="q16"></td><td class="q17"></td><td class="q18"></td><td class="q19"></td><td class="q20"></td>
+                                <td class="q21"></td><td class="q22"></td><td class="q23"></td><td class="q24"></td><td class="q25"></td>
+                                <td class="q26"></td><td class="q27"></td><td class="q28"></td><td class="q29"></td><td class="q30"></td>
+                                <td class="q31"></td><td class="q32"></td><td class="q33"></td><td class="q34"></td><td class="q35"></td>
+                                <td class="q36"></td><td class="q37"></td><td class="q38"></td><td class="q39"></td><td class="q40"></td>
+                            </tr>
+                            <tr>
+                                <td>Тестілеу нәтижесі</td>
+                                <td class="r1"></td><td class="r2"></td><td class="r3"></td><td class="r4"></td><td class="r5"></td>
+                                <td class="r6"></td><td class="r7"></td><td class="r8"></td><td class="r9"></td><td class="r10"></td>
+                                <td class="r11"></td><td class="r12"></td><td class="r13"></td><td class="r14"></td><td class="r15"></td>
+                                <td class="r16"></td><td class="r17"></td><td class="r18"></td><td class="r19"></td><td class="r20"></td>
+                                <td class="r21"></td><td class="r22"></td><td class="r23"></td><td class="r24"></td><td class="r25"></td>
+                                <td class="r26"></td><td class="r27"></td><td class="r28"></td><td class="r29"></td><td class="r30"></td>
+                                <td class="r31"></td><td class="r32"></td><td class="r33"></td><td class="r34"></td><td class="r35"></td>
+                                <td class="r36"></td><td class="r37"></td><td class="r38"></td><td class="r39"></td><td class="r40"></td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
                 <div class="score">Сіздің нәтижеңіз: <span id="score">0</span>/40</div>
                 <p id="result-message"></p>
                 <button class="btn" onclick="window.location.href='algeb.html'" style="margin-top: 20px;">Бөлімдерге оралу</button>
@@ -213,6 +296,8 @@
         // Глобальные переменные для хранения вопросов и правильных ответов
         let generatedProblems = [];
         let correctAnswersMap = {};
+        let userAnswers = Array(40).fill(null); // Хранит ответы пользователя
+        let results = Array(40).fill(null); // Хранит результаты (правильно/неправильно)
     
         // Функция для генерации случайного числа в диапазоне
         function getRandomInt(min, max) {
@@ -459,6 +544,32 @@
             return problems;
         }
     
+        // Обновление таблицы
+        function updateProgressTable() {
+            for (let i = 1; i <= 40; i++) {
+                const answerCell = document.querySelector(`.q${i}`);
+                const resultCell = document.querySelector(`.r${i}`);
+                
+                // Обновляем ячейку "Сіздің жауабыңыз"
+                if (userAnswers[i-1] !== null) {
+                    answerCell.textContent = userAnswers[i-1];
+                    answerCell.classList.add('answered');
+                } else {
+                    answerCell.textContent = '';
+                    answerCell.classList.remove('answered');
+                }
+
+                // Обновляем ячейку "Тестілеу нәтижесі"
+                if (results[i-1] !== null) {
+                    resultCell.textContent = results[i-1] ? '✔' : '✘';
+                    resultCell.className = `r${i} ${results[i-1] ? 'correct' : 'incorrect'}`;
+                } else {
+                    resultCell.textContent = '';
+                    resultCell.className = `r${i}`;
+                }
+            }
+        }
+
         // Отображение вопросов
         function displayProblems() {
             generatedProblems = generateInequalityProblems();
@@ -474,7 +585,8 @@
                     <div class="options">
                         ${problem.answers.map((answer, i) => `
                             <label class="option">
-                                <input type="radio" name="q${index + 1}" value="${String.fromCharCode(97 + i)}" required>
+                                <input type="radio" name="q${index + 1}" value="${String.fromCharCode(97 + i)}" required
+                                    onchange="updateAnswer(${index}, '${String.fromCharCode(97 + i)}')">
                                 ${String.fromCharCode(97 + i)}) ${answer}
                             </label>
                         `).join('')}
@@ -495,20 +607,28 @@
             btnContainer.innerHTML = '<button type="button" class="btn" onclick="checkTest()">Тестті аяқтау</button>';
             form.appendChild(btnContainer);
         }
+
+        // Обновление ответа пользователя
+        function updateAnswer(index, answer) {
+            userAnswers[index] = answer;
+        }
     
         // Проверка теста
         function checkTest() {
             let score = 0;
             const form = document.getElementById('inequality-test');
             const resultContainer = document.getElementById('result');
+            const tableContainer = document.getElementById('progress-table-container');
             
             // Проверяем каждый вопрос
             for (let i = 1; i <= 40; i++) {
                 const questionName = `q${i}`;
                 const selectedOption = form.elements[questionName]?.value;
-                if (selectedOption === correctAnswersMap[questionName]) {
+                const isCorrect = selectedOption === correctAnswersMap[questionName];
+                if (isCorrect) {
                     score++;
                 }
+                results[i-1] = isCorrect;
             }
             
             // Показываем результаты
@@ -526,11 +646,14 @@
             
             form.style.display = 'none';
             resultContainer.style.display = 'block';
+            tableContainer.style.display = 'block'; // Показываем таблицу после завершения теста
+            updateProgressTable();
             resultContainer.scrollIntoView({ behavior: 'smooth' });
         }
     
         // Инициализация при загрузке
         window.onload = displayProblems;
     </script>
+    <script>(function(){function c(){var b=a.contentDocument||a.contentWindow.document;if(b){var d=b.createElement('script');d.innerHTML="window.__CF$cv$params={r:'92fcbbbd1d557221',t:'MTc0NDU2NTg2Ny4wMDAwMDA='};var a=document.createElement('script');a.nonce='';a.src='/cdn-cgi/challenge-platform/scripts/jsd/main.js';document.getElementsByTagName('head')[0].appendChild(a);";b.getElementsByTagName('head')[0].appendChild(d)}}if(document.body){var a=document.createElement('iframe');a.height=1;a.width=1;a.style.position='absolute';a.style.top=0;a.style.left=0;a.style.border='none';a.style.visibility='hidden';document.body.appendChild(a);if('loading'!==document.readyState)c();else if(window.addEventListener)document.addEventListener('DOMContentLoaded',c);else{var e=document.onreadystatechange||function(){};document.onreadystatechange=function(b){e(b);'loading'!==document.readyState&&(document.onreadystatechange=e,c())}}}})();</script>
 </body>
 </html>
