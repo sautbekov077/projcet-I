@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Рационал теңдеулер - ҰБТ математика</title>
+    <title>Логарифмические неравенства - ҰБТ математика</title>
     <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
     <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
     <style>
@@ -192,13 +192,13 @@
     
     <section class="test-header">
         <div class="container">
-            <h1 class="test-title">Тест: Рационал теңдеулер</h1>
+            <h1 class="test-title">Тест: Логарифмические неравенства</h1>
         </div>
     </section>
     
     <div class="container">
         <div class="test-container">
-            <form id="rational-test">
+            <form id="log-ineq-test">
                 <div class="btn-container">
                     <button type="button" class="btn" onclick="checkTest()">Тестті аяқтау</button>
                 </div>
@@ -224,313 +224,102 @@
         let generatedProblems = [];
         let correctAnswersMap = {};
 
-        // Функция генерации задач
-        function generateRationalEquationsProblems() {
+        // Исправленная функция генерации логарифмических неравенств
+        function generateLogarithmicInequalities() {
             const problems = [];
             
-            // Функция для генерации случайного числа в диапазоне
+            // Генератор случайных чисел
             function getRandomInt(min, max) {
                 return Math.floor(Math.random() * (max - min + 1)) + min;
             }
-            
-            // Форматирование дроби для LaTeX
-            function formatFraction(num, denom) {
-                return `\\frac{${num}}{${denom}}`;
-            }
-            
-            // Форматирование линейного выражения (ax + b)
-            function formatLinear(a, b) {
-                if (a === 0) return `${b}`;
-                if (b === 0) return `${a}x`;
-                return `${a}x${b > 0 ? '+' : ''}${b}`;
-            }
-            
-            // Форматирование квадратичного выражения (x^2 + px + q)
-            function formatQuadratic(p, q) {
-                if (p === 0 && q === 0) return `x^2`;
-                if (p === 0) return `x^2${q > 0 ? '+' : ''}${q}`;
-                if (q === 0) return `x^2${p > 0 ? '+' : ''}${p}x`;
-                return `x^2${p > 0 ? '+' : ''}${p}x${q > 0 ? '+' : ''}${q}`;
-            }
-            
-            // Упрощение дроби
-            function simplifyFraction(num, denom) {
-                const gcd = (a, b) => b === 0 ? a : gcd(b, a % b);
-                const divisor = gcd(Math.abs(num), Math.abs(denom));
-                return [num / divisor, denom / divisor];
-            }
-            
-            // Генерация простого уравнения: (ax + b)/(cx + d) = k
-            function generateSimpleRationalEquation() {
-                const a = getRandomInt(1, 5);
-                const b = getRandomInt(-5, 5);
-                const c = getRandomInt(1, 5);
-                const d = getRandomInt(-5, 5);
-                const k = getRandomInt(-5, 5);
-                
-                // Решаем уравнение: (ax + b)/(cx + d) = k
-                // ax + b = k(cx + d)
-                // ax + b = kcx + kd
-                // ax - kcx = kd - b
-                // x(a - kc) = kd - b
-                // x = (kd - b)/(a - kc)
-                const denom = a - k * c;
-                const num = k * d - b;
-                if (denom === 0 || num === 0) return null; // Избегаем деления на ноль
-                
-                const [simplifiedNum, simplifiedDenom] = simplifyFraction(num, denom);
-                if (simplifiedDenom < 0) {
-                    return simplifyFraction(-simplifiedNum, -simplifiedDenom);
+
+            // Форматирование интервалов
+            function formatInterval(interval) {
+                if (Array.isArray(interval)) {
+                    const left = interval[0] === -Infinity ? '-\\infty' : interval[0];
+                    const right = interval[1] === Infinity ? '\\infty' : interval[1];
+                    return `(${left}; ${right})`;
                 }
-                if (Math.abs(simplifiedDenom) > 5 || c * simplifiedNum + d * simplifiedDenom === 0) return null;
-
-                const left = formatFraction(formatLinear(a, b), formatLinear(c, d));
-                const right = `${k}`;
-                return { question: `${left}=${right}`, correct: [simplifiedNum, simplifiedDenom] };
+                return interval.toString();
             }
-            
-            // Генерация уравнения с суммой дробей: (ax + b)/(cx + d) + (px + q)/(rx + s) = 0
-            function generateSumRationalEquation() {
-                const a = getRandomInt(1, 5);
-                const b = getRandomInt(-5, 5);
-                const c = getRandomInt(1, 5);
-                const d = getRandomInt(-5, 5);
-                const p = getRandomInt(1, 5);
-                const q = getRandomInt(-5, 5);
-                const r = getRandomInt(1, 5);
-                const s = getRandomInt(-5, 5);
-                
-                // Решаем: (ax + b)/(cx + d) + (px + q)/(rx + s) = 0
-                // (ax + b)(rx + s) + (px + q)(cx + d) = 0
-                // (arx^2 + asx + brx + bs) + (pcx^2 + pdx + qcx + qd) = 0
-                // (ar + pc)x^2 + (as + br + pd + qc)x + (bs + qd) = 0
-                const A = a * r + p * c;
-                const B = a * s + b * r + p * d + q * c;
-                const C = b * s + q * d;
-                
-                // Решаем квадратное уравнение: Ax^2 + Bx + C = 0
-                const discriminant = B * B - 4 * A * C;
-                if (discriminant < 0 || A === 0) return null;
-                
-                const sqrtD = Math.sqrt(discriminant);
-                const x1Num = -B + sqrtD;
-                const x1Denom = 2 * A;
-                const x2Num = -B - sqrtD;
-                const x2Denom = 2 * A;
-                
-                // Проверяем, является ли x1 подходящим решением
-                let num = Math.round(x1Num);
-                let denom = Math.round(x1Denom);
-                if (Math.abs(x1Num - num) > 0.001 || Math.abs(x1Denom - denom) > 0.001) {
-                    num = Math.round(x2Num);
-                    denom = Math.round(x2Denom);
-                    if (Math.abs(x2Num - num) > 0.001 || Math.abs(x2Denom - denom) > 0.001) return null;
+
+            // Генерация базового логарифмического неравенства: log_b x >/< c
+            function generateBasicLogInequality() {
+                const base = getRandomInt(2, 5); // Основание > 1
+                const compareTo = getRandomInt(0, 3); // compareTo >= 0, чтобы избежать отрицательных границ
+                const isGreaterThan = Math.random() > 0.5;
+
+                let correct;
+                const threshold = Math.pow(base, compareTo);
+                correct = isGreaterThan ? [threshold, Infinity] : [0, threshold];
+
+                // Проверка области определения: нижняя граница должна быть > 0
+                if (correct[0] <= 0) {
+                    correct[0] = 0.1; // Минимальная граница, чтобы x > 0
                 }
-                
-                [num, denom] = simplifyFraction(num, denom);
-                if (denom < 0) { num = -num; denom = -denom; }
-                if (Math.abs(denom) > 5 || c * num + d * denom === 0 || r * num + s * denom === 0) return null;
 
-                const left = `${formatFraction(formatLinear(a, b), formatLinear(c, d))}+${formatFraction(formatLinear(p, q), formatLinear(r, s))}`;
-                const right = `0`;
-                return { question: `${left}=${right}`, correct: [num, denom] };
+                const inequality = `\\log_{${base}} x ${isGreaterThan ? '>' : '<'} ${compareTo}`;
+                return { question: inequality, correct };
             }
-            
-            // Генерация уравнения с квадратичным знаменателем: (ax + b)/(x^2 + px + q) = k
-            function generateQuadraticDenomEquation() {
-                const a = getRandomInt(1, 5);
-                const b = getRandomInt(-5, 5);
-                const p = getRandomInt(-5, 5);
-                const q = getRandomInt(-5, 5);
-                const k = getRandomInt(-5, 5);
-                
-                // Решаем: (ax + b)/(x^2 + px + q) = k
-                // ax + b = k(x^2 + px + q)
-                // kx^2 + (kp - a)x + (kq - b) = 0
-                const A = k;
-                const B = k * p - a;
-                const C = k * q - b;
-                
-                if (A === 0) return null;
-                const discriminant = B * B - 4 * A * C;
-                if (discriminant < 0) return null;
-                
-                const sqrtD = Math.sqrt(discriminant);
-                const x1Num = -B + sqrtD;
-                const x1Denom = 2 * A;
-                const x2Num = -B - sqrtD;
-                const x2Denom = 2 * A;
-                
-                let num = Math.round(x1Num);
-                let denom = Math.round(x1Denom);
-                if (Math.abs(x1Num - num) > 0.001 || Math.abs(x1Denom - denom) > 0.001) {
-                    num = Math.round(x2Num);
-                    denom = Math.round(x2Denom);
-                    if (Math.abs(x2Num - num) > 0.001 || Math.abs(x2Denom - denom) > 0.001) return null;
+
+            // Генерация составного неравенства: c < log_b (x - shift) < d
+            function generateCompoundInequality() {
+                const base = getRandomInt(2, 4); // Основание > 1
+                const coef = getRandomInt(0, 2); // Начальное значение >= 0
+                const shift = getRandomInt(1, 3); // Сдвиг > 0
+
+                const lowerBound = Math.pow(base, coef);
+                const upperBound = Math.pow(base, coef + 1);
+                let correct = [lowerBound + shift, upperBound + shift];
+
+                // Проверка области определения: x - shift > 0 => x > shift
+                if (correct[0] <= shift) {
+                    correct[0] = shift + 0.1; // Убедимся, что нижняя граница > shift
+                    correct[1] = correct[0] + getRandomInt(1, 5); // Верхняя граница больше нижней
                 }
-                
-                [num, denom] = simplifyFraction(num, denom);
-                if (denom < 0) { num = -num; denom = -denom; }
-                if (Math.abs(denom) > 5 || num * num + p * num * denom + q * denom * denom === 0) return null;
 
-                const left = formatFraction(formatLinear(a, b), formatQuadratic(p, q));
-                const right = `${k}`;
-                return { question: `${left}=${right}`, correct: [num, denom] };
+                const inequality = `${coef} < \\log_{${base}} (x - ${shift}) < ${coef + 1}`;
+                return { question: inequality, correct };
             }
-            
-            // Генерация уравнения с дробями с обеих сторон: (ax + b)/(cx + d) = (px + q)/(rx + s), один ответ
-            function generateDoubleRationalEquationSingle() {
-                const a = getRandomInt(1, 5);
-                const b = getRandomInt(-5, 5);
-                const c = getRandomInt(1, 5);
-                const d = getRandomInt(-5, 5);
-                const p = getRandomInt(1, 5);
-                const q = getRandomInt(-5, 5);
-                const r = getRandomInt(1, 5);
-                const s = getRandomInt(-5, 5);
-                
-                // Решаем: (ax + b)/(cx + d) = (px + q)/(rx + s)
-                // (ax + b)(rx + s) = (px + q)(cx + d)
-                // arx^2 + asx + brx + bs = pcx^2 + pdx + qcx + qd
-                // (ar - pc)x^2 + (as + br - pd - qc)x + (bs - qd) = 0
-                const A = a * r - p * c;
-                const B = a * s + b * r - p * d - q * c;
-                const C = b * s - q * d;
-                
-                if (A === 0) return null;
-                const discriminant = B * B - 4 * A * C;
-                if (discriminant < 0) return null;
-                
-                const sqrtD = Math.sqrt(discriminant);
-                const x1Num = -B + sqrtD;
-                const x1Denom = 2 * A;
-                const x2Num = -B - sqrtD;
-                const x2Denom = 2 * A;
-                
-                let num = Math.round(x1Num);
-                let denom = Math.round(x1Denom);
-                if (Math.abs(x1Num - num) > 0.001 || Math.abs(x1Denom - denom) > 0.001) {
-                    num = Math.round(x2Num);
-                    denom = Math.round(x2Denom);
-                    if (Math.abs(x2Num - num) > 0.001 || Math.abs(x2Denom - denom) > 0.001) return null;
-                }
-                
-                [num, denom] = simplifyFraction(num, denom);
-                if (denom < 0) { num = -num; denom = -denom; }
-                if (Math.abs(denom) > 5 || c * num + d * denom === 0 || r * num + s * denom === 0) return null;
 
-                const left = formatFraction(formatLinear(a, b), formatLinear(c, d));
-                const right = formatFraction(formatLinear(p, q), formatLinear(r, s));
-                return { question: `${left}=${right}`, correct: [num, denom] };
-            }
-            
-            // Генерация уравнения с двумя ответами: (ax + b)/(cx + d) = (px + q)/(rx + s)
-            function generateDoubleRationalEquationDouble() {
-                const a = getRandomInt(1, 5);
-                const b = getRandomInt(-5, 5);
-                const c = getRandomInt(1, 5);
-                const d = getRandomInt(-5, 5);
-                const p = getRandomInt(1, 5);
-                const q = getRandomInt(-5, 5);
-                const r = getRandomInt(1, 5);
-                const s = getRandomInt(-5, 5);
-                
-                // Решаем: (ax + b)/(cx + d) = (px + q)/(rx + s)
-                const A = a * r - p * c;
-                const B = a * s + b * r - p * d - q * c;
-                const C = b * s - q * d;
-                
-                if (A === 0) return null;
-                const discriminant = B * B - 4 * A * C;
-                if (discriminant <= 0) return null;
-                
-                const sqrtD = Math.sqrt(discriminant);
-                const x1Num = -B + sqrtD;
-                const x1Denom = 2 * A;
-                const x2Num = -B - sqrtD;
-                const x2Denom = 2 * A;
-                
-                const num1 = Math.round(x1Num);
-                const denom1 = Math.round(x1Denom);
-                const num2 = Math.round(x2Num);
-                const denom2 = Math.round(x2Denom);
-                
-                if (Math.abs(x1Num - num1) > 0.001 || Math.abs(x1Denom - denom1) > 0.001 ||
-                    Math.abs(x2Num - num2) > 0.001 || Math.abs(x2Denom - denom2) > 0.001 ||
-                    num1 / denom1 === num2 / denom2) return null;
-                
-                let [simplifiedNum1, simplifiedDenom1] = simplifyFraction(num1, denom1);
-                let [simplifiedNum2, simplifiedDenom2] = simplifyFraction(num2, denom2);
-                if (simplifiedDenom1 < 0) { simplifiedNum1 = -simplifiedNum1; simplifiedDenom1 = -simplifiedDenom1; }
-                if (simplifiedDenom2 < 0) { simplifiedNum2 = -simplifiedNum2; simplifiedDenom2 = -simplifiedDenom2; }
-                
-                if (Math.abs(simplifiedDenom1) > 5 || Math.abs(simplifiedDenom2) > 5 ||
-                    c * simplifiedNum1 + d * simplifiedDenom1 === 0 || r * simplifiedNum1 + s * simplifiedDenom1 === 0 ||
-                    c * simplifiedNum2 + d * simplifiedDenom2 === 0 || r * simplifiedNum2 + s * simplifiedDenom2 === 0) return null;
-
-                const left = formatFraction(formatLinear(a, b), formatLinear(c, d));
-                const right = formatFraction(formatLinear(p, q), formatLinear(r, s));
-                return { question: `${left}=${right}`, correct: [[simplifiedNum1, simplifiedDenom1], [simplifiedNum2, simplifiedDenom2]], isTwoAnswer: true };
-            }
-            
             // Генерация неправильных ответов
-            function generateWrongAnswers(correct, isTwoAnswer = false) {
-                const wrongAnswers = new Set();
-                while (wrongAnswers.size < 3) {
-                    if (isTwoAnswer) {
-                        const variation1 = getRandomInt(-2, 2);
-                        const variation2 = getRandomInt(-2, 2);
-                        const newAnswer1 = [correct[0][0] + variation1, correct[0][1]];
-                        const newAnswer2 = [correct[1][0] + variation2, correct[1][1]];
-                        if (variation1 !== 0 || variation2 !== 0) {
-                            wrongAnswers.add(JSON.stringify([newAnswer1, newAnswer2]));
-                        }
-                    } else {
-                        const variation = getRandomInt(-2, 2);
-                        const newNum = correct[0] + variation;
-                        if (variation !== 0 && newNum !== 0) {
-                            wrongAnswers.add(JSON.stringify([newNum, correct[1]]));
-                        }
+            function generateWrongAnswers(correct) {
+                const wrong = new Set();
+                while (wrong.size < 3) {
+                    const variation = getRandomInt(-2, 2);
+                    const fake = [correct[0] + variation, correct[1] + variation];
+                    // Убедимся, что интервал корректен: нижняя граница > 0 и меньше верхней
+                    if (variation !== 0 && fake[0] > 0 && fake[0] < fake[1] && JSON.stringify(fake) !== JSON.stringify(correct)) {
+                        wrong.add(JSON.stringify(fake));
                     }
                 }
-                return isTwoAnswer ? Array.from(wrongAnswers).map(JSON.parse) : Array.from(wrongAnswers);
+                return Array.from(wrong).map(JSON.parse);
             }
-            
-            // Генерация 25 задач
-            const types = [
-                generateSimpleRationalEquation,
-                generateSumRationalEquation,
-                generateQuadraticDenomEquation,
-                generateDoubleRationalEquationSingle,
-                generateDoubleRationalEquationDouble
+
+            // Создание 25 задач
+            const generators = [
+                generateBasicLogInequality,
+                generateCompoundInequality
             ];
-            
+
             let i = 0;
-            while (problems.length < 25 && i < 1000) { // Ограничение на общее количество попыток
-                const typeIndex = Math.floor(problems.length / 5);
-                const generator = types[typeIndex];
-                const equation = generator();
-                if (equation) {
-                    const correctAnswer = equation.correct;
-                    const wrongAnswers = generateWrongAnswers(correctAnswer, equation.isTwoAnswer);
-                    
-                    const answers = [correctAnswer, ...wrongAnswers].sort((a, b) => {
-                        if (Array.isArray(a[0]) && Array.isArray(b[0])) {
-                            return (a[0][0] / a[0][1]) - (b[0][0] / b[0][1]);
-                        }
-                        return (a[0] / a[1]) - (b[0] / b[1]);
-                    });
-                    
+            while (problems.length < 25 && i < 1000) {
+                const generator = generators[getRandomInt(0, generators.length - 1)];
+                const problem = generator();
+                if (problem && problem.correct && Array.isArray(problem.correct) && problem.correct[0] > 0 && problem.correct[0] < problem.correct[1]) {
+                    const answers = [problem.correct, ...generateWrongAnswers(problem.correct)];
+                    answers.sort((a, b) => a[0] - b[0]); // Сортировка по нижней границе
                     problems.push({
-                        question: equation.question,
-                        correct: correctAnswer,
-                        answers: answers,
-                        isTwoAnswer: equation.isTwoAnswer
+                        question: problem.question,
+                        correct: formatInterval(problem.correct),
+                        answers: answers.map(formatInterval)
                     });
+                } else {
+                    console.warn('Skipping invalid problem:', problem);
                 }
                 i++;
             }
-            
+
             if (problems.length < 25) {
                 console.error(`Generated only ${problems.length} problems`);
             }
@@ -540,12 +329,12 @@
         // Генерация и отображение вопросов
         function displayProblems() {
             try {
-                generatedProblems = generateRationalEquationsProblems();
+                generatedProblems = generateLogarithmicInequalities();
                 if (!generatedProblems || generatedProblems.length === 0) {
                     throw new Error('No problems generated');
                 }
 
-                const form = document.getElementById('rational-test');
+                const form = document.getElementById('log-ineq-test');
                 const btnContainer = form.querySelector('.btn-container');
                 form.innerHTML = '';
                 form.appendChild(btnContainer);
@@ -556,12 +345,16 @@
                     
                     const questionText = document.createElement('div');
                     questionText.className = 'question-text';
-                    questionText.innerHTML = `${index + 1}. Теңдеуді шешіңіз: \\(${problem.question}\\)${problem.isTwoAnswer ? '<br><small>(Ескерту: екі жауап болуы мүмкін)</small>' : ''}`;
+                    questionText.innerHTML = `${index + 1}. Шешіңіз: \\(${problem.question}\\)`;
                     
                     const optionsDiv = document.createElement('div');
                     optionsDiv.className = 'options';
 
                     problem.answers.forEach((answer, i) => {
+                        if (answer === null || answer === undefined) {
+                            console.error(`Null answer detected for question ${index + 1}:`, problem);
+                            return;
+                        }
                         const label = document.createElement('label');
                         label.className = 'option';
                         
@@ -572,14 +365,7 @@
                         input.required = true;
                         
                         const answerText = document.createElement('span');
-                        if (problem.isTwoAnswer) {
-                            const [num1, denom1] = answer[0];
-                            const [num2, denom2] = answer[1];
-                            answerText.innerHTML = `${String.fromCharCode(97 + i)}) \\(${denom1 === 1 ? num1 : formatFraction(num1, denom1)}, ${denom2 === 1 ? num2 : formatFraction(num2, denom2)}\\)`;
-                        } else {
-                            const [num, denom] = answer;
-                            answerText.innerHTML = `${String.fromCharCode(97 + i)}) \\(${denom === 1 ? num : formatFraction(num, denom)}\\)`;
-                        }
+                        answerText.innerHTML = `${String.fromCharCode(97 + i)}) \\(${answer}\\)`;
                         
                         label.appendChild(input);
                         label.appendChild(answerText);
@@ -588,9 +374,7 @@
 
                     // Сохраняем правильный ответ
                     correctAnswersMap[`q${index + 1}`] = String.fromCharCode(
-                        97 + problem.answers.findIndex(a => 
-                            JSON.stringify(a) === JSON.stringify(problem.correct)
-                        )
+                        97 + problem.answers.findIndex(a => a === problem.correct)
                     );
 
                     questionDiv.appendChild(questionText);
@@ -602,7 +386,7 @@
                 if (window.MathJax) {
                     MathJax.typesetPromise().catch(err => {
                         console.error('MathJax rendering failed:', err);
-                        const form = document.getElementById('rational-test');
+                        const form = document.getElementById('log-ineq-test');
                         form.innerHTML = '<div class="error-message">Ошибка рендеринга формул. Пожалуйста, обновите страницу.</div>';
                     });
                 } else {
@@ -610,7 +394,7 @@
                 }
             } catch (error) {
                 console.error('Error in displayProblems:', error);
-                const form = document.getElementById('rational-test');
+                const form = document.getElementById('log-ineq-test');
                 form.innerHTML = '<div class="error-message">Ошибка генерации теста: ' + error.message + '. Пожалуйста, обновите страницу.</div>';
             }
         }
@@ -619,7 +403,7 @@
         function checkTest() {
             try {
                 let score = 0;
-                const form = document.getElementById('rational-test');
+                const form = document.getElementById('log-ineq-test');
                 const resultContainer = document.getElementById('result');
                 
                 generatedProblems.forEach((problem, index) => {
@@ -636,7 +420,7 @@
                 const resultMessage = document.getElementById('result-message');
                 
                 if (percentage >= 90) {
-                    resultMessage.textContent = "Тамаша! Сіз рационал теңдеулерді жетік шешесіз!";
+                    resultMessage.textContent = "Тамаша! Сіз логарифмические неравенства жетік шешесіз!";
                 } else if (percentage >= 60) {
                     resultMessage.textContent = "Жақсы! Кейбір қателерді түзету қажет.";
                 } else {
@@ -661,7 +445,7 @@
                     callback();
                 }).catch(err => {
                     console.error('MathJax startup failed:', err);
-                    const form = document.getElementById('rational-test');
+                    const form = document.getElementById('log-ineq-test');
                     form.innerHTML = '<div class="error-message">MathJax не загрузился. Пожалуйста, обновите страницу.</div>';
                 });
             } else {
