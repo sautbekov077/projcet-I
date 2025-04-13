@@ -3,9 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Логарифмические неравенства - ҰБТ математика</title>
-    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
-    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    <title>Логарифмдік теңсіздіктер - ҰБТ тақырыптары бойынша математикалық есептер</title>
     <style>
         body {
             font-family: 'Roboto', Arial, sans-serif;
@@ -94,9 +92,19 @@
             margin-bottom: 15px;
         }
         
+        .equation {
+            font-family: 'Times New Roman', serif;
+            font-size: 1.1rem;
+            margin: 15px 0;
+            padding: 15px;
+            background-color: #f8f9fa;
+            border-radius: 5px;
+            text-align: center;
+        }
+        
         .options {
             display: grid;
-            grid-template-columns: repeat(auto-fit, minmax(150px, 1fr));
+            grid-template-columns: 1fr;
             gap: 12px;
         }
         
@@ -171,11 +179,9 @@
             margin-top: 50px;
         }
 
-        .error-message {
-            color: red;
-            text-align: center;
-            padding: 20px;
-            font-size: 1.2rem;
+        .equation img {
+            vertical-align: middle;
+            max-width: 100%;
         }
     </style>
 </head>
@@ -192,23 +198,22 @@
     
     <section class="test-header">
         <div class="container">
-            <h1 class="test-title">Тест: Логарифмические неравенства</h1>
+            <h1 class="test-title">Тест: Логарифмдік теңсіздіктер</h1>
         </div>
     </section>
     
     <div class="container">
         <div class="test-container">
-            <form id="log-ineq-test">
-                <div class="btn-container">
-                    <button type="button" class="btn" onclick="checkTest()">Тестті аяқтау</button>
-                </div>
+            <form id="logarithmic-inequalities-test">
+                <!-- Сұрақтар JavaScript арқылы жасалады -->
             </form>
             
             <div class="result-container" id="result">
                 <h3 class="result-title">Тест нәтижесі</h3>
                 <div class="score">Сіздің нәтижеңіз: <span id="score">0</span>/25</div>
                 <p id="result-message"></p>
-                <button class="btn" onclick="window.location.href='algeb.html'" style="margin-top: 20px;">Бөлімдерге оралу</button>
+                <button type="button" class="btn" id="restart-test" style="margin-right: 10px;">Қайта бастау</button>
+                <button class="btn" onclick="window.location.href='algebra.html'" style="margin-top: 20px;">Бөлімдерге оралу</button>
             </div>
         </div>
     </div>
@@ -218,13 +223,15 @@
             <p>© 404 Found Group.</p>
         </div>
     </footer>
-
+    
+    <script src="https://polyfill.io/v3/polyfill.min.js?features=es6"></script>
+    <script id="MathJax-script" async src="https://cdn.jsdelivr.net/npm/mathjax@3/es5/tex-mml-chtml.js"></script>
+    
     <script>
         // Глобальные переменные
         let generatedProblems = [];
         let correctAnswersMap = {};
 
-        // Исправленная функция генерации логарифмических неравенств
         function generateLogarithmicInequalities() {
             const problems = [];
             
@@ -233,232 +240,289 @@
                 return Math.floor(Math.random() * (max - min + 1)) + min;
             }
 
-            // Форматирование интервалов
+            // Функция для преобразования десятичных чисел в дроби
+            function decimalToFraction(num) {
+                if (num === Infinity || num === -Infinity) return num;
+                
+                const tolerance = 1.0E-6;
+                let numerator = 1, denominator = 1;
+                const value = Math.abs(num);
+                
+                if (Math.abs(value - Math.round(value)) < tolerance) {
+                    return Math.round(num).toString();
+                }
+
+                let a = Math.floor(value);
+                let x = value - a;
+                while (x > tolerance && denominator < 1000) {
+                    x = 1 / x;
+                    a = Math.floor(x);
+                    [numerator, denominator] = [denominator, denominator * a + numerator];
+                    x = x - a;
+                }
+                
+                const sign = num < 0 ? "-" : "";
+                if (a === 0) {
+                    return `${sign}\\frac{${numerator}}{${denominator}}`;
+                } else {
+                    return `${sign}${a}\\frac{${numerator}}{${denominator}}`;
+                }
+            }
+
+            // Форматирование интервалов с использованием дробей
             function formatInterval(interval) {
                 if (Array.isArray(interval)) {
-                    const left = interval[0] === -Infinity ? '-\\infty' : interval[0];
-                    const right = interval[1] === Infinity ? '\\infty' : interval[1];
-                    return `(${left}; ${right})`;
+                    let left = interval[0] === -Infinity ? "-\\infty" : decimalToFraction(interval[0]);
+                    let right = interval[1] === Infinity ? "\\infty" : decimalToFraction(interval[1]);
+                    let leftBracket = interval[0] === -Infinity ? "(" : interval[2] ? "[" : "(";
+                    let rightBracket = interval[1] === Infinity ? ")" : interval[3] ? "]" : ")";
+                    
+                    // Проверяем, что значения не null или undefined
+                    left = left === null || left === undefined ? "-\\infty" : left;
+                    right = right === null || right === undefined ? "\\infty" : right;
+                    
+                    return `${leftBracket}${left}; ${right}${rightBracket}`;
                 }
-                return interval.toString();
+                // В случае если передана строка, а не массив, просто возвращаем строку
+                return interval;
             }
 
-            // Генерация базового логарифмического неравенства: log_b x >/< c
-            function generateBasicLogInequality() {
-                const base = getRandomInt(2, 5); // Основание > 1
-                const compareTo = getRandomInt(0, 3); // compareTo >= 0, чтобы избежать отрицательных границ
-                const isGreaterThan = Math.random() > 0.5;
+            // Генерация логарифмического неравенства вида lg(ax + b) <= c или lg(ax + b) >= c
+            function generateSimpleLogInequality() {
+                let a, b, c, isLessThanOrEqual, correct;
 
-                let correct;
-                const threshold = Math.pow(base, compareTo);
-                correct = isGreaterThan ? [threshold, Infinity] : [0, threshold];
+                do {
+                    a = getRandomInt(1, 5); // Коэффициент при x
+                    b = getRandomInt(-5, 5); // Свободный член
+                    c = getRandomInt(0, 2); // Правая часть неравенства
+                    isLessThanOrEqual = Math.random() > 0.5; // <= или >=
 
-                // Проверка области определения: нижняя граница должна быть > 0
-                if (correct[0] <= 0) {
-                    correct[0] = 0.1; // Минимальная граница, чтобы x > 0
-                }
+                    // Решаем неравенство
+                    // lg(ax + b) <= c => ax + b <= 10^c (для основания 10, так как lg)
+                    // lg(ax + b) >= c => ax + b >= 10^c
+                    // Также учитываем область определения: ax + b > 0
 
-                const inequality = `\\log_{${base}} x ${isGreaterThan ? '>' : '<'} ${compareTo}`;
-                return { question: inequality, correct };
-            }
+                    let threshold = Math.pow(10, c); // 10^c
+                    
+                    // Вычисляем граничные значения как рациональные числа
+                    const boundaryValue = (threshold - b)/a;
+                    const domainValue = -b/a;
 
-            // Генерация составного неравенства: c < log_b (x - shift) < d
-            function generateCompoundInequality() {
-                const base = getRandomInt(2, 4); // Основание > 1
-                const coef = getRandomInt(0, 2); // Начальное значение >= 0
-                const shift = getRandomInt(1, 3); // Сдвиг > 0
+                    if (isLessThanOrEqual) {
+                        // lg(ax + b) <= c => ax + b <= 10^c => ax <= 10^c - b => x <= (10^c - b)/a
+                        if (a > 0) {
+                            correct = [-Infinity, boundaryValue, false, true]; // (..., (10^c - b)/a]
+                            // Учитываем область определения ax + b > 0 => x > -b/a
+                            correct[0] = domainValue;
+                            correct[2] = false; // Открытая скобка, так как строгое неравенство ax + b > 0
+                        } else {
+                            correct = [boundaryValue, Infinity, true, false]; // [(10^c - b)/a, ...)
+                            // Учитываем область определения ax + b > 0 => x < -b/a
+                            correct[1] = domainValue;
+                            correct[3] = false; // Открытая скобка
+                        }
+                    } else {
+                        // lg(ax + b) >= c => ax + b >= 10^c => x >= (10^c - b)/a
+                        if (a > 0) {
+                            correct = [boundaryValue, Infinity, true, false]; // [(10^c - b)/a, ...)
+                            // Учитываем область определения ax + b > 0 => x > -b/a
+                            if (domainValue > boundaryValue) {
+                                correct[0] = domainValue;
+                                correct[2] = false; // Открытая скобка
+                            }
+                        } else {
+                            correct = [-Infinity, boundaryValue, false, true]; // (..., (10^c - b)/a]
+                            // Учитываем область определения ax + b > 0 => x < -b/a
+                            if (domainValue < boundaryValue) {
+                                correct[1] = domainValue;
+                                correct[3] = false; // Открытая скобка
+                            }
+                        }
+                    }
 
-                const lowerBound = Math.pow(base, coef);
-                const upperBound = Math.pow(base, coef + 1);
-                let correct = [lowerBound + shift, upperBound + shift];
+                    // Проверяем, что интервал существует (не пустой)
+                } while (correct[0] >= correct[1]);
 
-                // Проверка области определения: x - shift > 0 => x > shift
-                if (correct[0] <= shift) {
-                    correct[0] = shift + 0.1; // Убедимся, что нижняя граница > shift
-                    correct[1] = correct[0] + getRandomInt(1, 5); // Верхняя граница больше нижней
-                }
-
-                const inequality = `${coef} < \\log_{${base}} (x - ${shift}) < ${coef + 1}`;
+                const sign = isLessThanOrEqual ? "\\leq" : "\\geq";
+                const inequality = `\\lg(${a}x ${b >= 0 ? "+" : ""}${b}) ${sign} ${c}`;
                 return { question: inequality, correct };
             }
 
             // Генерация неправильных ответов
             function generateWrongAnswers(correct) {
                 const wrong = new Set();
+                
+                // Функция для проверки валидности интервала
+                function isValidInterval(interval) {
+                    return interval[0] < interval[1] && 
+                           interval[0] !== null && interval[0] !== undefined &&
+                           interval[1] !== null && interval[1] !== undefined;
+                }
+                
                 while (wrong.size < 3) {
-                    const variation = getRandomInt(-2, 2);
-                    const fake = [correct[0] + variation, correct[1] + variation];
-                    // Убедимся, что интервал корректен: нижняя граница > 0 и меньше верхней
-                    if (variation !== 0 && fake[0] > 0 && fake[0] < fake[1] && JSON.stringify(fake) !== JSON.stringify(correct)) {
+                    // Добавляем вариации с дробями
+                    const variationNum = getRandomInt(1, 3);
+                    const variationDen = getRandomInt(1, 3);
+                    const variation = variationNum/variationDen;
+                    
+                    let fake;
+                    if (Math.random() > 0.5) {
+                        // Сдвиг границ
+                        fake = [
+                            correct[0] === -Infinity ? -Infinity : correct[0] + variation,
+                            correct[1] === Infinity ? Infinity : correct[1] + variation,
+                            correct[2],
+                            correct[3]
+                        ];
+                    } else {
+                        // Инверсия интервала или изменение типов скобок
+                        const options = [
+                            // Инверсия интервала
+                            [
+                                correct[1] === Infinity ? -Infinity : correct[1],
+                                correct[0] === -Infinity ? Infinity : correct[0],
+                                !correct[3],
+                                !correct[2]
+                            ],
+                            // Изменение типов скобок
+                            [
+                                correct[0],
+                                correct[1],
+                                !correct[2],
+                                correct[3]
+                            ],
+                            [
+                                correct[0],
+                                correct[1],
+                                correct[2],
+                                !correct[3]
+                            ]
+                        ];
+                        
+                        fake = options[getRandomInt(0, options.length - 1)];
+                    }
+                    
+                    // Проверяем, что интервал валидный и отличается от правильного
+                    if (isValidInterval(fake) && JSON.stringify(fake) !== JSON.stringify(correct)) {
                         wrong.add(JSON.stringify(fake));
                     }
                 }
-                return Array.from(wrong).map(JSON.parse);
+                
+                return Array.from(wrong).map(x => JSON.parse(x));
             }
 
             // Создание 25 задач
-            const generators = [
-                generateBasicLogInequality,
-                generateCompoundInequality
-            ];
-
-            let i = 0;
-            while (problems.length < 25 && i < 1000) {
-                const generator = generators[getRandomInt(0, generators.length - 1)];
-                const problem = generator();
-                if (problem && problem.correct && Array.isArray(problem.correct) && problem.correct[0] > 0 && problem.correct[0] < problem.correct[1]) {
-                    const answers = [problem.correct, ...generateWrongAnswers(problem.correct)];
-                    answers.sort((a, b) => a[0] - b[0]); // Сортировка по нижней границе
-                    problems.push({
-                        question: problem.question,
-                        correct: formatInterval(problem.correct),
-                        answers: answers.map(formatInterval)
-                    });
-                } else {
-                    console.warn('Skipping invalid problem:', problem);
-                }
-                i++;
+            for (let i = 0; i < 25; i++) {
+                let problem = generateSimpleLogInequality();
+                let correctAnswer = formatInterval(problem.correct);
+                let wrongAnswers = generateWrongAnswers(problem.correct).map(formatInterval);
+                
+                // Создаем массив всех ответов (правильный + неправильные)
+                let allAnswers = [correctAnswer, ...wrongAnswers];
+                
+                // Перемешиваем ответы
+                allAnswers.sort(() => Math.random() - 0.5);
+                
+                problems.push({
+                    question: problem.question,
+                    correct: correctAnswer,
+                    answers: allAnswers
+                });
             }
 
-            if (problems.length < 25) {
-                console.error(`Generated only ${problems.length} problems`);
-            }
             return problems;
         }
 
-        // Генерация и отображение вопросов
+        // Отображение вопросов
         function displayProblems() {
-            try {
-                generatedProblems = generateLogarithmicInequalities();
-                if (!generatedProblems || generatedProblems.length === 0) {
-                    throw new Error('No problems generated');
-                }
+            generatedProblems = generateLogarithmicInequalities();
+            const form = document.getElementById('logarithmic-inequalities-test');
+            form.innerHTML = '';
+            
+            generatedProblems.forEach((problem, index) => {
+                const questionDiv = document.createElement('div');
+                questionDiv.className = 'question';
+                
+                questionDiv.innerHTML = `
+                    <div class="question-text">${index + 1}. Теңсіздікті шешіңіз:</div>
+                    <div class="equation">\\[${problem.question}\\]</div>
+                    <div class="options">
+                        ${problem.answers.map((answer, i) => `
+                            <label class="option">
+                                <input type="radio" name="q${index + 1}" value="${String.fromCharCode(97 + i)}" required>
+                                \\[${answer}\\]
+                            </label>
+                        `).join('')}
+                    </div>
+                `;
+                
+                // Находим индекс правильного ответа в массиве всех ответов
+                const correctIndex = problem.answers.indexOf(problem.correct);
+                // Сохраняем правильный ответ как букву (a, b, c, d)
+                correctAnswersMap[`q${index + 1}`] = String.fromCharCode(97 + correctIndex);
+                
+                form.appendChild(questionDiv);
+            });
 
-                const form = document.getElementById('log-ineq-test');
-                const btnContainer = form.querySelector('.btn-container');
-                form.innerHTML = '';
-                form.appendChild(btnContainer);
+            // Кнопка завершения теста
+            const btnContainer = document.createElement('div');
+            btnContainer.className = 'btn-container';
+            btnContainer.innerHTML = '<button type="button" class="btn" id="finish-test">Тестті аяқтау</button>';
+            form.appendChild(btnContainer);
+            
+            // Добавляем обработчик события
+            document.getElementById('finish-test').addEventListener('click', checkTest);
 
-                generatedProblems.forEach((problem, index) => {
-                    const questionDiv = document.createElement('div');
-                    questionDiv.className = 'question';
-                    
-                    const questionText = document.createElement('div');
-                    questionText.className = 'question-text';
-                    questionText.innerHTML = `${index + 1}. Шешіңіз: \\(${problem.question}\\)`;
-                    
-                    const optionsDiv = document.createElement('div');
-                    optionsDiv.className = 'options';
-
-                    problem.answers.forEach((answer, i) => {
-                        if (answer === null || answer === undefined) {
-                            console.error(`Null answer detected for question ${index + 1}:`, problem);
-                            return;
-                        }
-                        const label = document.createElement('label');
-                        label.className = 'option';
-                        
-                        const input = document.createElement('input');
-                        input.type = 'radio';
-                        input.name = `q${index + 1}`;
-                        input.value = String.fromCharCode(97 + i);
-                        input.required = true;
-                        
-                        const answerText = document.createElement('span');
-                        answerText.innerHTML = `${String.fromCharCode(97 + i)}) \\(${answer}\\)`;
-                        
-                        label.appendChild(input);
-                        label.appendChild(answerText);
-                        optionsDiv.appendChild(label);
-                    });
-
-                    // Сохраняем правильный ответ
-                    correctAnswersMap[`q${index + 1}`] = String.fromCharCode(
-                        97 + problem.answers.findIndex(a => a === problem.correct)
-                    );
-
-                    questionDiv.appendChild(questionText);
-                    questionDiv.appendChild(optionsDiv);
-                    form.insertBefore(questionDiv, btnContainer);
-                });
-
-                // Перерендер MathJax
-                if (window.MathJax) {
-                    MathJax.typesetPromise().catch(err => {
-                        console.error('MathJax rendering failed:', err);
-                        const form = document.getElementById('log-ineq-test');
-                        form.innerHTML = '<div class="error-message">Ошибка рендеринга формул. Пожалуйста, обновите страницу.</div>';
-                    });
-                } else {
-                    throw new Error('MathJax not loaded');
-                }
-            } catch (error) {
-                console.error('Error in displayProblems:', error);
-                const form = document.getElementById('log-ineq-test');
-                form.innerHTML = '<div class="error-message">Ошибка генерации теста: ' + error.message + '. Пожалуйста, обновите страницу.</div>';
-            }
+            // Рендеринг LaTeX
+            MathJax.typeset();
         }
 
         // Проверка теста
         function checkTest() {
-            try {
-                let score = 0;
-                const form = document.getElementById('log-ineq-test');
-                const resultContainer = document.getElementById('result');
+            let score = 0;
+            const form = document.getElementById('logarithmic-inequalities-test');
+            const resultContainer = document.getElementById('result');
+            
+            // Проверяем каждый вопрос
+            for (let i = 1; i <= 25; i++) {
+                const questionName = `q${i}`;
+                const selectedOption = document.querySelector(`input[name="${questionName}"]:checked`)?.value;
                 
-                generatedProblems.forEach((problem, index) => {
-                    const questionName = `q${index + 1}`;
-                    const selectedOption = form.elements[questionName]?.value;
-                    if (selectedOption === correctAnswersMap[questionName]) {
-                        score++;
-                    }
-                });
-
-                // Показ результатов
-                document.getElementById('score').textContent = score;
-                const percentage = (score / 25) * 100;
-                const resultMessage = document.getElementById('result-message');
-                
-                if (percentage >= 90) {
-                    resultMessage.textContent = "Тамаша! Сіз логарифмические неравенства жетік шешесіз!";
-                } else if (percentage >= 60) {
-                    resultMessage.textContent = "Жақсы! Кейбір қателерді түзету қажет.";
-                } else {
-                    resultMessage.textContent = "Қайталап көріңіз. Нәтижені жақсарта аласыз!";
+                if (selectedOption && selectedOption === correctAnswersMap[questionName]) {
+                    score++;
                 }
-
-                form.style.display = 'none';
-                resultContainer.style.display = 'block';
-                resultContainer.scrollIntoView({ behavior: 'smooth' });
-            } catch (error) {
-                console.error('Error in checkTest:', error);
-                const resultContainer = document.getElementById('result');
-                resultContainer.innerHTML = '<div class="error-message">Ошибка при проверке теста. Пожалуйста, обновите страницу.</div>';
-                resultContainer.style.display = 'block';
             }
-        }
-
-        // Ожидание полной загрузки MathJax
-        function waitForMathJax(callback) {
-            if (window.MathJax && window.MathJax.startup && window.MathJax.startup.promise) {
-                window.MathJax.startup.promise.then(() => {
-                    callback();
-                }).catch(err => {
-                    console.error('MathJax startup failed:', err);
-                    const form = document.getElementById('log-ineq-test');
-                    form.innerHTML = '<div class="error-message">MathJax не загрузился. Пожалуйста, обновите страницу.</div>';
-                });
+            
+            document.getElementById('score').textContent = score;
+            const percentage = (score / 25) * 100;
+            const message = document.getElementById('result-message');
+            
+            if (percentage >= 85) {
+                message.textContent = "Тамаша нәтиже! Сіз логарифмдік теңсіздіктерді жақсы білесіз.";
+            } else if (percentage >= 50) {
+                message.textContent = "Жақсы нәтиже! Кішкене қателерді түзетуге болады.";
             } else {
-                setTimeout(() => waitForMathJax(callback), 100);
+                message.textContent = "Материалды қайталап, тағы да көріңіз. Сіз жақсырақ жасай аласыз!";
             }
+            
+            form.style.display = 'none';
+            resultContainer.style.display = 'block';
+            resultContainer.scrollIntoView({ behavior: 'smooth' });
+        }
+        
+        // Сброс и перезапуск теста
+        function resetTest() {
+            document.getElementById('result').style.display = 'none';
+            document.getElementById('logarithmic-inequalities-test').style.display = 'block';
+            displayProblems();
+            window.scrollTo({ top: 0, behavior: 'smooth' });
         }
 
         // Инициализация при загрузке
-        window.onload = () => {
-            waitForMathJax(() => {
-                displayProblems();
-            });
-        };
+        document.addEventListener('DOMContentLoaded', function() {
+            displayProblems();
+            document.getElementById('restart-test').addEventListener('click', resetTest);
+        });
     </script>
 </body>
 </html>
